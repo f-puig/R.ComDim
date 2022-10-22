@@ -7,6 +7,7 @@ FilterSamplesMultiBlock <- function(MB = MB, samples =  getSampleNames(MB)) {
   #' @param MB A MultiBlock object for which prediction is desired.
   #' @param samples A vector containing the names of the samples to keep.
   #' @return A ComDim object.
+  #' @export
 
   if(class(MB) != 'MultiBlock'){
     stop("'MB' is  not a MultiBlock.")
