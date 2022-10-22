@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.com/f-puig/R.ComDim.svg?branch=main)](https://travis-ci.com/f-puig/R.ComDim)
-
 # ComDim
 
 ## Introduction: the ComDim method
