@@ -1,0 +1,62 @@
+Package: R.ComDim
+Type: Package
+Title: ComDim analysis under R environment
+Version: 0.9.5
+Author: Francesc Puig-Castellví
+Maintainer: Francesc Puig-Castellví <puig.francesc@gmail.com>
+Description:
+    It contains the functions to run ComDim
+    ComDim is an unsupervised multi-block method that aims to simultaneously consider
+    multiple data tables to find the latent components that are common to all the tables
+    as well as those that are specific to each data table, along with the contribution of
+    each of the tables to each of these components.
+License: MIT + file LICENSE
+Imports: pracma, utils, ggplot2, gridExtra, methods
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2
+Collate: 
+    'AddMetadata.R'
+    'BuildMultiBlock.R'
+    'ComDim_Exploratory_MB.R'
+    'ComDim_KOPLS_MB.R'
+    'ComDim_PCA_MB.R'
+    'ComDim_PLS_MB.R'
+    'ComDim_y_MB.R'
+    'ExpandMultiBlock.R'
+    'FilterSamplesMultiBlock.R'
+    'InfRemoveMultiBlock.R'
+    'MakeComDimLoadingsTable.R'
+    'MakeComDimScoresTable.R'
+    'MultiAssayExperiment2MultiBlock.R'
+    'MultiBlock.R'
+    'MultiBlock2MultiAssayExperiment.R'
+    'MultiBlock2matrix.R'
+    'NARemoveMultiBlock.R'
+    'NormalizeMultiBlock.R'
+    'Predict_MB.R'
+    'ProcessMultiBlock.R'
+    'SelectFeaturesRW.R'
+    'SplitRW.R'
+    'SplitVariablesMB.R'
+    'SummarizedExperiment2MultiBlock.R'
+    'ComDim-classes.R'
+    'data-KEGG_table_metabolites.R'
+    'data-RNAseq3.R'
+    'data-extra.R'
+    'data-gcms.R'
+    'data-intra.R'
+    'data-lcms.R'
+    'data-lipids.R'
+    'data-metadata_RNAseq3.R'
+    'data-metadata_lipids.R'
+    'data-mirnaseq.R'
+    'data-rnaseq.R'
+    'getBlockNames.R'
+    'getSampleNames.R'
+    'getVariableNames.R'
+    'ncolMultiBlock.R'
+    'nrowMultiBlock.R'
+    'setBlockNames.R'
+    'setSampleNames.R'
+    'setVariableNames.R'
