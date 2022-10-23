@@ -47,7 +47,7 @@ BuildMultiBlock <- function(..., ignore.names = FALSE, ignore.size = FALSE) {
 
   for(i in 1:length(add_param)) {
 
-    if(any(class(add_param[[i]]) == "matrix" || class(add_param[[i]]) == "data.frame")) {
+    if(any(class(add_param[[i]]) == "matrix") || any(class(add_param[[i]]) == "data.frame")) {
       if(is.data.frame(add_param[[i]])){
         if(any('character' %in% lapply(add_param[[i]], class))){
           stop('There is at least one data.frame with character data.')
@@ -193,7 +193,7 @@ to remove uncommon samples across blocks.")
     common_samples <- vector()
     for(i in 1:length(samples_list)){
 
-      if(any(duplicated(samples_list[[i]]) && ignore.names)){
+      if(any(duplicated(samples_list[[i]])) && ignore.names){
         stop('There are duplicate sample names in at least one block. Set ignore.names = TRUE and/or ignore.size = TRUE.')
       }
 
