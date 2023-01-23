@@ -1,0 +1,13 @@
+citHeader("To cite R.ComDim in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "Rearrangement of incomplete multi-omics datasets combined with ComDim for evaluating replicate cross-platform variability and batch influence",
+  author   = "Puig-Castellví F, Jouan-Rimbaud Bouveresse D, Mazéas L, Chapleur O, Rutledge DN",
+  journal  = "Chemometrics and Intelligent Laboratory Systems",
+  year     = "2021"",
+  volume   = "218",
+  pages    = "104422",
+  url      = "https://doi.org/10.1016/j.chemolab.2021.104422",
+  textVersion = "Puig-Castellví F, Jouan-Rimbaud Bouveresse D, Mazéas L, Chapleur O, Rutledge DN (2021) Rearrangement of incomplete multi-omics datasets combined with ComDim for evaluating replicate cross-platform variability and batch influence.Chemometrics and Intelligent Laboratory Systems 218: 104422"
+)
