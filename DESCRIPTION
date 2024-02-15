@@ -11,7 +11,7 @@ Description:
     as well as those that are specific to each data table, along with the contribution of
     each of the tables to each of these components.
 License: MIT + file LICENSE
-Imports: pracma, utils, ggplot2, gridExtra, methods
+Imports: pracma, utils, ggplot2, gridExtra, methods, vctrs (>= 0.6.4)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.1
