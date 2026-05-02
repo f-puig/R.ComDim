@@ -1,14 +1,14 @@
 Package: R.ComDim
 Type: Package
-Title: ComDim Analysis in R
+Title: 'ComDim' Analysis in R
 Version: 1.0.0
 Authors@R: person(given = "Francesc",
                   family = "Puig-Castellví",
                   role = c("aut", "cre"),
                   email = "puig.francesc@gmail.com")
 Description:
-    Provides functions to run ComDim analysis.
-    ComDim is a multi-block method that simultaneously considers multiple data 
+    Provides functions to run 'ComDim' analysis.
+    'ComDim' is a multi-block method that simultaneously considers multiple data
     tables to find latent components that are common to all the tables as well 
     as those specific to each data table, along with the contribution of each 
     table to each component.
