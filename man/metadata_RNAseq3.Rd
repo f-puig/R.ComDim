@@ -8,7 +8,7 @@
 An object of class \code{data.frame} with 16890 rows and 2 columns.
 }
 \source{
-\href{https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-8834}{ARRAYEXPRESS}
+\href{https://seqout.org/p/E-MTAB-8834}{SEQOUT}
 }
 \usage{
 data(mouse_ds)
