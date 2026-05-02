@@ -2,8 +2,10 @@ Package: R.ComDim
 Type: Package
 Title: ComDim Analysis in R
 Version: 1.0.0
-Author: Francesc Puig-Castellví
-Maintainer: Francesc Puig-Castellví <puig.francesc@gmail.com>
+Authors@R: person(given = "Francesc",
+                  family = "Puig-Castellví",
+                  role = c("aut", "cre"),
+                  email = "puig.francesc@gmail.com")
 Description:
     Provides functions to run ComDim analysis.
     ComDim is a multi-block method that simultaneously considers multiple data 

@@ -7,23 +7,39 @@
 MultiBlock2Matrix(MB = MB, blocks = NULL, vars = NULL)
 }
 \arguments{
-\item{MB}{The MultiBlocks structure.}
+\item{MB}{A \code{MultiBlock} object.}
 
-\item{blocks}{The blocks to combine into a matrix. It can be a vector of integers or a vector with the block names.}
+\item{blocks}{The blocks to combine. A vector of integers (block indices) or a vector of block
+names. When omitted, all blocks are included.}
 
-\item{vars}{The variables to kept. It is a list object with the same length as 'blocks'. Each element in the list contains the position of the variables in the nth block.}
+\item{vars}{The variables to keep. A list of the same length as \code{blocks}. Each element
+contains the indices (integer) or names (character) of the variables to retain from the
+corresponding block. When omitted, all variables in each block are included.}
 }
 \value{
-The MultiBlock
+A numeric matrix with rows corresponding to samples and columns corresponding to the
+  variables of the selected blocks concatenated in order.
 }
 \description{
-Combines the blocks of a MultiBlock into a matrix. Useful for calculating summary information of the whole MB (ex. maximum value).
+Combines the blocks of a MultiBlock into a single matrix by column-binding the selected blocks.
+Useful for computing summary statistics across the whole MultiBlock (e.g. maximum value).
+}
+\details{
+Blocks are column-bound in the order given by \code{blocks}. Row names of the output matrix
+  are the sample names of \code{MB}. Column names are the variable names; if the same variable
+  name appears in more than one block, duplicates are disambiguated by appending
+  \code{.<block_name>} to all occurrences of the repeated name, and a warning is issued.
 }
 \examples{
 b1 <- matrix(rnorm(500), 10, 50)
 b2 <- matrix(rnorm(800), 10, 80)
 mb <- MultiBlock(Data = list(b1 = b1, b2 = b2))
-# Convert data to a matrix:
-mb <- MultiBlock2Matrix(mb)
-max(mb)
+# Combine all blocks into a matrix and compute a summary statistic:
+mat <- MultiBlock2Matrix(mb)
+max(mat)
+# Combine only the first block, keeping variables 1-10:
+mat <- MultiBlock2Matrix(mb, blocks = 1, vars = list(1:10))
+}
+\seealso{
+\code{\link{MultiBlock}}, \code{\link{ProcessMultiBlock}}
 }

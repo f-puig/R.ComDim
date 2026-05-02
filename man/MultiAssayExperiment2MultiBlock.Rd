@@ -7,15 +7,45 @@
 MultiAssayExperiment2MultiBlock(se, colData_samplenames = NULL, Batch = NULL)
 }
 \arguments{
-\item{se}{The MultiAssayExperiment object.}
+\item{se}{A \code{MultiAssayExperiment} object.}
 
-\item{colData_samplenames}{Character string with the column metadata. If colData_samplenames is NULL, the metadata will not be stored.}
+\item{colData_samplenames}{Character string giving the name of the column in \code{colData(se)}
+that holds the sample names used for matching. When \code{NULL}, \code{colData} metadata is
+not stored in the resulting MultiBlock.}
 
-\item{Batch}{The name of the column that will be considered as Batch.}
+\item{Batch}{Character string giving the name of the column in \code{colData(se)} to use as
+the Batch variable. Requires \code{colData_samplenames} to be set; an error is raised if
+\code{Batch} is supplied but \code{colData_samplenames} is \code{NULL} or the column is not
+found in \code{colData}.}
 }
 \value{
-The MultiBlock.
+A \code{MultiBlock} object with one block per experiment in \code{se}.
 }
 \description{
-Converts a MultiAssayExperiment into a MultiBlock.
+Converts a MultiAssayExperiment into a MultiBlock. Samples are first intersected across all
+experiments so that only common samples are retained.
+}
+\details{
+Columns (samples) are intersected across all experiments via \code{intersectColumns} before
+  conversion. Each experiment in the \code{MultiAssayExperiment} becomes one block in the
+  MultiBlock (rows = samples, columns = features). Sample names are taken from the
+  \code{colData} row names of \code{se}. Metadata from \code{colData} is stored only for the
+  first block; subsequent blocks share the same sample order but carry no additional metadata.
+  If \code{Batch} is specified, the corresponding column is extracted from \code{colData},
+  removed from the metadata, and stored as the \code{Batch} slot of the MultiBlock.
+}
+\examples{
+\dontrun{
+library(MultiAssayExperiment)
+mae <- MultiAssayExperiment(
+  experiments = ExperimentList(
+    block1 = matrix(rnorm(50), nrow = 5, dimnames = list(paste0("s", 1:5), paste0("v", 1:10))),
+    block2 = matrix(rnorm(30), nrow = 5, dimnames = list(paste0("s", 1:5), paste0("w", 1:6)))
+  )
+)
+mb <- MultiAssayExperiment2MultiBlock(mae)
+}
+}
+\seealso{
+\code{\link{MultiBlock}}, \code{\link{MultiBlock2MultiAssayExperiment}}
 }

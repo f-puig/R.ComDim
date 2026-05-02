@@ -20,23 +20,50 @@ SelectFeaturesRW(
 
 \item{results}{The output object obtained in the ComDim analysis.}
 
-\item{ndim}{The number of the component for which the most important variables are to be calculated.}
+\item{ndim}{The number of the component for which the important variables are to be identified.}
 
 \item{blocks}{A vector with the indices or the names for the replicate blocks of the same data type.}
 
 \item{threshold_cor}{The "times" parameter used to calculate the threshold in the following formula: cor(variable) > times * sd(cor(variables)). Minimal value that can be assigned to threshold_cor is 1.}
 
-\item{threshold_cov}{The "times" parameter used to calculate the threshold in the following formula: cov(variable) > times * sd(cov(variables)). Minimal value that can be assigned to threshold_cor is 1.}
+\item{threshold_cov}{The "times" parameter used to calculate the threshold in the following formula: cov(variable) > times * sd(cov(variables)). Minimal value that can be assigned to threshold_cov is 1.}
 
 \item{mean.RW}{Logical value to indicate whether the RW data must be mean-centered (TRUE) or not (FALSE).}
 
-\item{plots}{Parameter to indicate whether a plot must be produced. Possible values are "NO" for no plots, "separated" for plotting each plot individually, and "together" to plot all the plots in the same grid.}
+\item{plots}{Parameter to indicate whether S-plots (covariance vs. correlation with the Q scores)
+must be produced. Possible values are \code{"NO"} for no plots, \code{"separated"} for displaying
+one S-plot per block individually (pausing between plots), and \code{"together"} to arrange all
+S-plots side by side in a single grid. In all plot variants, variables selected as important are
+highlighted in red and labelled with their variable name. Requires the \code{ggplot2} package;
+\code{"together"} additionally requires \code{gridExtra}.}
 }
 \value{
-An object with 2 lists. The first list contains the important variables presenting a positive relationship with the scores, while the second list contains the most important variables presenting a negative relationship.
+A named list with two elements:
+  \describe{
+    \item{\code{$positive}}{Integer indices (named by variable name) of the important variables
+      presenting a positive relationship with the Q scores (positive covariance, positive
+      correlation, and positive local P-loading) across all specified blocks.}
+    \item{\code{$negative}}{Integer indices (named by variable name) of the important variables
+      presenting a negative relationship with the Q scores (negative covariance, negative
+      correlation, and negative local P-loading) across all specified blocks.}
+  }
+  When \code{plots} is not \code{"NO"}, S-plots are also displayed as a side effect: each plot
+  shows covariance on the x-axis and correlation on the y-axis, with selected variables
+  highlighted in red.
 }
 \description{
-Finds the important variables presenting a coordinated response in all the replicate-blocks
+Finds the important variables presenting a coordinated response across all specified replicate-blocks
+for a given ComDim component.
+}
+\details{
+The function applies an S-plot approach to identify variables that are both strongly covarying
+  and strongly correlated with the Q scores of the chosen component. For each block in
+  \code{blocks}, covariance (\code{s1}) and correlation (\code{s2}) of every variable with the
+  (pseudo-inverse-scaled) Q scores are computed. A variable is considered important in a block if
+  its absolute covariance exceeds \code{threshold_cov * sd(s1)} \emph{and} its absolute correlation
+  exceeds \code{threshold_cor * sd(s2)}. Only variables that satisfy both criteria in \emph{all}
+  specified blocks simultaneously are returned. The sign of the local P-loadings is used to
+  separate variables into positive and negative groups.
 }
 \examples{
 \dontrun{
@@ -51,6 +78,13 @@ mb <- MultiBlock(
 )
 rw <- SplitRW(mb)
 results <- ComDim_PCA(rw, 2)
+# Identify important variables for component 1 across replicate blocks 2, 3, and 4
 features <- SelectFeaturesRW(RW = rw, results = results, ndim = 1, blocks = c(2, 3, 4))
+# Use stricter thresholds and display S-plots side by side
+features <- SelectFeaturesRW(RW = rw, results = results, ndim = 1, blocks = c(2, 3, 4),
+                             threshold_cor = 2, threshold_cov = 2, plots = "together")
 }
+}
+\seealso{
+\code{\link{SplitRW}}, \code{\link{ComDim_PCA}}
 }

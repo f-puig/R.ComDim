@@ -2,30 +2,46 @@
 % Please edit documentation in R/ExpandMultiBlock.R
 \name{ExpandMultiBlock}
 \alias{ExpandMultiBlock}
-\title{ExpandMultiBlock
-Splits data into several blocks, allowing variables to appear on more than one block at the same time.}
+\title{ExpandMultiBlock}
 \usage{
 ExpandMultiBlock(data = NULL, metadata = NULL, minblock = 0, loquace = TRUE)
 }
 \arguments{
-\item{data}{A data.frame or a matrix. Samples are in rows and variables in columns.
-If variables are in rows (samples in columns), the matrix is transposed automatically.}
+\item{data}{A data.frame or matrix with samples in rows and variables in columns.}
 
-\item{metadata}{A 2-column data.frame detailing how columns in data must be propagated. Entries in the second column must match the column names in data (variable names). The first column details the new blocks.}
+\item{metadata}{A 2-column data.frame describing how variables are assigned to blocks. The
+first column gives the block name; the second column gives the variable name, and must match
+the column names of \code{data}. A variable may appear in multiple rows (and therefore in
+multiple blocks).}
 
-\item{minblock}{The minimal number of variables that need to be contained in a block in order to be kept.}
+\item{minblock}{Integer. Blocks with fewer than \code{minblock} variables are discarded. Use
+\code{0} (default) to keep all blocks regardless of size.}
 
-\item{loquace}{To display warning}
+\item{loquace}{Logical. If \code{TRUE} (default), a warning is printed listing column names in
+\code{data} that have no matching entry in the second column of \code{metadata}.}
 }
 \value{
-A MultiBlock object.
+A \code{MultiBlock} object whose blocks are defined by the first column of
+  \code{metadata}, or \code{NULL} if no valid blocks could be constructed.
 }
 \description{
-ExpandMultiBlock
-Splits data into several blocks, allowing variables to appear on more than one block at the same time.
+Splits data into several blocks, allowing variables to appear in more than one block
+simultaneously. Each variable is duplicated into every block to which it is assigned according
+to the \code{metadata} mapping table.
+}
+\details{
+For each row in \code{metadata} that matches a variable in \code{data}, the variable's
+  values are copied into the corresponding block column. Column names in the resulting expanded
+  matrix are formed as \code{<block>.<variable>}. Variables with all-\code{NA} values after
+  expansion are removed. If no matches exist between \code{data} column names and
+  \code{metadata}, \code{NULL} is returned with a warning. If \code{minblock} filtering
+  removes all blocks, \code{NULL} is returned.
 }
 \examples{
 data(mouse_ds)
 lipidsMB <- ExpandMultiBlock(data = lipids, metadata = metadata_lipids,
   minblock = 0, loquace = FALSE)
+}
+\seealso{
+\code{\link{MultiBlock}}, \code{\link{ProcessMultiBlock}}
 }

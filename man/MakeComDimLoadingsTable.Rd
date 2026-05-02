@@ -7,19 +7,33 @@
 MakeComDimLoadingsTable(model, blocks = NULL, dim = NULL, dim.ort = NULL)
 }
 \arguments{
-\item{model}{The output from a ComDim analysis.}
+\item{model}{The output from a ComDim analysis (a \code{ComDim} object).}
 
-\item{blocks}{The blocks from which the data will be extracted. It can be a vector of integers or a vector with the block names. Optional.}
+\item{blocks}{The blocks from which loadings will be extracted. A vector of integers (block
+indices) or block names. When omitted, all blocks are included.}
 
-\item{dim}{The dimensions from which the data will be extracted. It can be a vector of integers. Optional.}
+\item{dim}{Integer vector of predictive component indices to include. When omitted, all
+predictive components in the model are included.}
 
-\item{dim.ort}{The orthogonal dimensions from which the data will be extracted. It can be a vector of integers. If NULL, all orthogonal components are extracted. If 0, none of the orthogonal components are extracted. Optional.}
+\item{dim.ort}{Integer vector of orthogonal component indices to include. When \code{NULL},
+all orthogonal components present in the model are included. When \code{0}, no orthogonal
+components are included.}
 }
 \value{
-A table with the selected information
+A long data frame with one row per variable–component combination, containing the
+  following columns:
+  \describe{
+    \item{\code{variable.id}}{Variable name (factor).}
+    \item{\code{variable.id.number}}{Position of the variable across all blocks (factor).}
+    \item{\code{block.id}}{Integer index of the block.}
+    \item{\code{block.name}}{Name of the block (factor).}
+    \item{\code{dim}}{Component number.}
+    \item{\code{value}}{Loading value (from \code{P.loadings} or \code{Orthogonal$P.loadings.ort}).}
+  }
 }
 \description{
-Creates a long data frame with the loadings from a ComDim model, suitable for ggplot.
+Creates a long (tidy) data frame with the local P-loadings from a ComDim model, suitable for
+use with \pkg{ggplot2}.
 }
 \examples{
 b1 <- matrix(rnorm(500), 10, 50) # 10 rows and 50 columns
@@ -27,4 +41,7 @@ b2 <- matrix(rnorm(800), 10, 80) # 10 rows and 80 columns
 mb <- MultiBlock(Data = list(b1 = b1, b2 = b2))
 model <- ComDim_PCA(mb, ndim = 2)
 tbl <- MakeComDimLoadingsTable(model)
+}
+\seealso{
+\code{\link{MakeComDimScoresTable}}, \code{\link{ComDim_PCA}}
 }

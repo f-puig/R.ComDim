@@ -7,13 +7,36 @@
 MultiBlock2MultiAssayExperiment(MB, MSEmetadata = NULL)
 }
 \arguments{
-\item{MB}{The MultiBlock object.}
+\item{MB}{A \code{MultiBlock} object.}
 
-\item{MSEmetadata}{List of unstructured metadata describing the overall content of the object.}
+\item{MSEmetadata}{An optional list of unstructured metadata describing the overall content of
+the MultiAssayExperiment (stored in its \code{metadata} slot). Pass \code{NULL} (default) to
+omit experiment-level metadata.}
 }
 \value{
-The MultiAssayExperiment object.
+A \code{MultiAssayExperiment} object with one experiment per block in \code{MB}.
 }
 \description{
-Converts MultiBlock into a MultiAssayExperiment.
+Converts a MultiBlock into a MultiAssayExperiment. Each block becomes one experiment; sample
+names, batch information, and metadata are carried over into the \code{colData} of the result.
+}
+\details{
+Each block in \code{MB} is transposed (features x samples) and stored as a named matrix in
+  the \code{ExperimentList}. Row names are set to the variable names and column names to the
+  sample names of the MultiBlock. The \code{colData} is constructed from \code{MB@Samples};
+  any \code{Metadata} and \code{Batch} information present in the MultiBlock is appended as
+  additional columns. A \code{sampleMap} is generated mapping every sample to every experiment
+  using the same primary and column names.
+}
+\examples{
+\dontrun{
+b1 <- matrix(rnorm(50), 5, 10, dimnames = list(paste0("s", 1:5), paste0("v", 1:10)))
+b2 <- matrix(rnorm(30), 5,  6, dimnames = list(paste0("s", 1:5), paste0("w", 1:6)))
+mb <- MultiBlock(Data = list(block1 = b1, block2 = b2))
+mae <- MultiBlock2MultiAssayExperiment(mb)
+mae <- MultiBlock2MultiAssayExperiment(mb, MSEmetadata = list(study = "example"))
+}
+}
+\seealso{
+\code{\link{MultiBlock}}, \code{\link{MultiAssayExperiment2MultiBlock}}
 }

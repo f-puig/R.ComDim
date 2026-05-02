@@ -8,7 +8,7 @@
 An object of class \code{matrix} (inherits from \code{array}) with 36 rows and 15 columns.
 }
 \source{
-\href{https://www.ebi.ac.uk/metabolights/MTBLS283}{Metabolights}
+\href{https://www.ebi.ac.uk/metabolights/editor/MTBLS283}{Metabolights}
 }
 \usage{
 data(dataset3)

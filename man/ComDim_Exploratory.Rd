@@ -37,9 +37,9 @@ change in the global score vector is below this value (1e-10 as default).}
 }
 \value{
 A \code{ComDim} object. Slots for supervised analysis
-(\code{R2Y}, \code{Q2}, \code{DQ2}, \code{VIP}, \code{VIP.block},
-\code{PLS.model}, \code{cv}, \code{Prediction}) are empty. The
-populated slots are:
+  (\code{R2Y}, \code{Q2}, \code{DQ2}, \code{VIP}, \code{VIP.block},
+  \code{PLS.model}, \code{cv}, \code{Prediction}) are empty. The
+  populated slots are:
 \describe{
   \item{\code{Method}}{The label supplied via the \code{method} argument.}
   \item{\code{ndim}}{Number of Common Dimensions extracted.}
@@ -56,12 +56,13 @@ populated slots are:
     local score
     \eqn{\mathbf{t}_{ba} =
     \mathbf{X}_b\,\mathbf{p}_{ba}(\mathbf{p}_{ba}'\mathbf{p}_{ba})^{-1}}.}
-  \item{\code{P.loadings}}{Global loadings matrix (\eqn{p_{tot} \times ndim}).
-    Column \eqn{a} is \eqn{\mathbf{P}_a = \mathbf{X}'\mathbf{q}_a},
+  \item{\code{P.loadings}}{Global loadings matrix (\eqn{p_{tot} \times
+    ndim}).  Column \eqn{a} is
+    \eqn{\mathbf{P}_a = \mathbf{X}'\mathbf{q}_a},
     where \eqn{\mathbf{X}} is the mean-centred (and optionally normalised)
     concatenated blocks.}
-  \item{\code{Saliences}}{Block salience (weight) matrix (\eqn{ntable \times
-    ndim}, row names = block names).  Entry \eqn{(b,a)} is
+  \item{\code{Saliences}}{Block salience (weight) matrix (\eqn{ntable
+    \times ndim}, row names = block names).  Entry \eqn{(b,a)} is
     \eqn{\lambda_{ba} =
     \mathbf{q}_a'\mathbf{X}_b\mathbf{X}_b'\mathbf{q}_a},
     the variance of block \eqn{b} captured by global score \eqn{a}.}
@@ -70,15 +71,15 @@ populated slots are:
     be the score vector returned by FUN for component \eqn{a} (before
     unit-normalisation to obtain \eqn{\mathbf{q}_a}), so that
     \eqn{sv_a = \|\mathbf{s}_a\|}; then
-    \deqn{R2X_a = sv_a^4 / \sum_k sv_k^4 =
-    Singular_a^2 / \sum_k Singular_k^2.}}
+    \deqn{R2X_a = sv_a^4 \big/ \sum_k sv_k^4 =
+    Singular_a^2 \big/ \sum_k Singular_k^2.}}
   \item{\code{Singular}}{Squared L2 norms of the FUN score vectors:
     \eqn{Singular_a = sv_a^2 = \|\mathbf{s}_a\|^2}, used to derive
     \code{R2X}.}
   \item{\code{Mean}}{List with \code{MeanMB}: named list of column-mean
     vectors per block, used for mean-centring.}
-  \item{\code{Norm}}{List with \code{NormMB}: Frobenius norms used for block
-    normalisation (all ones when \code{normalise = FALSE}).}
+  \item{\code{Norm}}{List with \code{NormMB}: Frobenius norms used for
+    block normalisation (all ones when \code{normalise = FALSE}).}
   \item{\code{variable.block}}{Character vector (length \eqn{p_{tot}})
     indicating the block name of each row in \code{P.loadings}.}
   \item{\code{runtime}}{Total computation time in seconds.}

@@ -12,19 +12,37 @@ SplitRW(
 )
 }
 \arguments{
-\item{MB}{The multi-block structure built with \code{MultiBlock()}.}
+\item{MB}{A \code{MultiBlock} object built with \code{\link{MultiBlock}()}. Must contain
+\code{Batch} information; blocks without batch labels are treated as a single batch.}
 
-\item{checkSampleCorrespondence}{If FALSE, the same number of samples and the sample order are assumed for all the batches. If TRUE, only the samples found in all replicate blocks will be included in the final structure.}
+\item{checkSampleCorrespondence}{Logical. If \code{FALSE} (default), identical sample order
+and count are assumed across all batches and only the minimum batch size is used. If
+\code{TRUE}, sample names are intersected across all batches and only common samples are
+retained, which is safer when batches have different sizes or orderings.}
 
-\item{batchNormalisation}{If TRUE, each RW block is divided by its norm and the square root of the number of replicates.}
+\item{batchNormalisation}{Logical. If \code{TRUE} (default), each replicate block is divided
+by its Frobenius norm and by the square root of the number of replicates in its original
+block, to prevent blocks with more replicates from dominating the analysis.}
 
-\item{showSampleCorrespondence}{If TRUE, print in the console a data frame with the sample correspondence across blocks.}
+\item{showSampleCorrespondence}{Logical. If \code{TRUE} (default), a matrix showing the
+sample names assigned to each replicate block is printed to the console.}
 }
 \value{
-The list containing the multi-block composed of the replicate-blocks.
+A \code{MultiBlock} object in which each block corresponds to one batch of one
+  original data block (a replicate-wise structure ready for \code{\link{ComDim_PCA}} or
+  similar).
 }
 \description{
-To split a multi-block into a list containing smaller blocks, comprising each data from one batch.
+Splits a multi-block into a replicate-wise (RW) structure by expanding each block along its
+batch dimension. Each batch within each original block becomes a separate block in the output,
+enabling replicate-wise ComDim analysis.
+}
+\details{
+Output block names follow the convention \code{<original_block>} when the original block has
+  only one batch, or \code{<original_block>_<batch_label>} when it has multiple batches.
+  The \code{Metadata} slot of each source block is also split and carried over to the
+  corresponding replicate blocks. If the MultiBlock has no \code{Batch} information at all,
+  the original object is returned unchanged with a warning.
 }
 \examples{
 b1 <- matrix(rnorm(1500), 30, 50)
@@ -37,4 +55,7 @@ mb <- MultiBlock(
   ignore.names = TRUE
 )
 rw <- SplitRW(mb)
+}
+\seealso{
+\code{\link{MultiBlock}}, \code{\link{ComDim_PCA}}, \code{\link{SelectFeaturesRW}}
 }

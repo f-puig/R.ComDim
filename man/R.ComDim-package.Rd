@@ -11,4 +11,8 @@ multi-block method that simultaneously considers multiple data tables to
 find latent components common to all tables as well as those specific to
 each table.
 }
+\author{
+\strong{Maintainer}: Francesc Puig-Castellví \email{puig.francesc@gmail.com}
+
+}
 \keyword{internal}

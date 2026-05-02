@@ -8,7 +8,7 @@
 An object of class \code{matrix} (inherits from \code{array}) with 12 rows and 9254 columns.
 }
 \source{
-\href{https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-8834}{ARRAYEXPRESS}
+\href{https://seqout.org/p/E-MTAB-8834}{SEQOUT}
 }
 \usage{
 data(mouse_ds)

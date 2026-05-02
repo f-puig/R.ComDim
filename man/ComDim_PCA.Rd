@@ -31,9 +31,9 @@ ComDim_PCA(
 }
 \value{
 A \code{ComDim} object. Slots for supervised analysis
-(\code{R2Y}, \code{Q2}, \code{DQ2}, \code{VIP}, \code{VIP.block},
-\code{PLS.model}, \code{cv}, \code{Prediction}) are empty. The
-populated slots are:
+  (\code{R2Y}, \code{Q2}, \code{DQ2}, \code{VIP}, \code{VIP.block},
+  \code{PLS.model}, \code{cv}, \code{Prediction}) are empty. The
+  populated slots are:
 \describe{
   \item{\code{Method}}{\code{"PCA"}.}
   \item{\code{ndim}}{Number of Common Dimensions extracted.}
@@ -64,7 +64,7 @@ populated slots are:
     component (named vector, length \eqn{ndim}).  Let
     \eqn{d_a} be the leading singular value of \eqn{\mathbf{W}} for
     component \eqn{a} (stored as \eqn{Singular_a = d_a^2}); then
-    \deqn{R2X_a = Singular_a^2 / \sum_k Singular_k^2 = d_a^4 /
+    \deqn{R2X_a = Singular_a^2 \big/ \sum_k Singular_k^2 = d_a^4 \big/
     \sum_k d_k^4.}}
   \item{\code{Singular}}{Squared leading singular values of
     \eqn{\mathbf{W}}, one per component:

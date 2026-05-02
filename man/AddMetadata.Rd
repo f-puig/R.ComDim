@@ -37,3 +37,6 @@ mb <- AddMetadata(mb, block = "b1", batches = batch_b1)
 # Add (or overwrite) metadata for block 'b1':
 mb <- AddMetadata(mb, block = "b1", metadata = meta_b1)
 }
+\seealso{
+\code{\link{MultiBlock}}, \code{\link{FilterSamplesMultiBlock}}
+}

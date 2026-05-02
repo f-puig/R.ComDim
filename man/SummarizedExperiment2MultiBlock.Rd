@@ -7,15 +7,44 @@
 SummarizedExperiment2MultiBlock(se, colData_samplenames = NULL, Batch = NULL)
 }
 \arguments{
-\item{se}{The SummarizedExperiment object.}
+\item{se}{A \code{SummarizedExperiment} object.}
 
-\item{colData_samplenames}{Character string with the column metadata.}
+\item{colData_samplenames}{Character string giving the name of the column in \code{colData(se)}
+that holds the sample names used for matching. When \code{NULL}, \code{colData} metadata is
+not stored in the resulting MultiBlock.}
 
-\item{Batch}{The name of the column that will be considered as Batch.}
+\item{Batch}{Character string giving the name of the column in \code{colData(se)} to use as
+the Batch variable. When supplied, the column is extracted from \code{colData}, removed from
+the metadata, and stored in the \code{Batch} slot of the MultiBlock. Requires at least one
+of \code{colData_samplenames} or a named \code{colData}; an error is raised if the column
+is not found.}
 }
 \value{
-The MultiBlock object.
+A \code{MultiBlock} object with one block per assay in \code{se}.
 }
 \description{
-Converts a SummarizedExperiment into a MultiBlock.
+Converts a \code{SummarizedExperiment} into a MultiBlock. Each assay in the
+\code{SummarizedExperiment} becomes one block (rows = samples, columns = features).
+}
+\details{
+Each assay is transposed so that samples are in rows and features in columns. Sample order
+  is aligned to \code{colData(se)} row names; samples not present in \code{colData} are
+  removed. If an assay has no name, the block is labelled \code{"X"}. Metadata from
+  \code{colData} (excluding the Batch column if specified) is stored only for the first block;
+  subsequent assays are appended as additional blocks with no extra metadata.
+}
+\examples{
+\dontrun{
+library(SummarizedExperiment)
+nrows <- 20; ncols <- 6
+counts <- matrix(runif(nrows * ncols, 1, 1e4), nrows)
+rownames(counts) <- paste0("feature", seq_len(nrows))
+colnames(counts) <- paste0("sample",  seq_len(ncols))
+se <- SummarizedExperiment(assays = list(counts = counts))
+mb <- SummarizedExperiment2MultiBlock(se)
+}
+}
+\seealso{
+\code{\link{MultiBlock}}, \code{\link{MultiAssayExperiment2MultiBlock}},
+  \code{\link{MultiBlock2MultiAssayExperiment}}
 }

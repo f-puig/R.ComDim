@@ -13,21 +13,42 @@ MakeComDimScoresTable(
 )
 }
 \arguments{
-\item{model}{The output from a ComDim analysis.}
+\item{model}{The output from a ComDim analysis (a \code{ComDim} object).}
 
-\item{blocks}{The blocks from which the data will be extracted. It can be a vector of integers or a vector with the block names. Optional.}
+\item{blocks}{The blocks from which local scores will be extracted. A vector of integers (block
+indices) or block names. When omitted, all blocks are included. Only relevant when
+\code{"T.scores"} or \code{"T.scores.ort"} are in \code{include}.}
 
-\item{dim}{The dimensions from which the data will be extracted. It can be a vector of integers. Optional.}
+\item{dim}{Integer vector of predictive component indices to include. When omitted, all
+predictive components in the model are included.}
 
-\item{dim.ort}{The orthogonal dimensions from which the data will be extracted. It can be a vector of integers. If NULL, all orthogonal components are extracted. If 0, none of the orthogonal components are extracted. Optional.}
+\item{dim.ort}{Integer vector of orthogonal component indices to include. When \code{NULL},
+all orthogonal components present in the model are included. When \code{0}, no orthogonal
+components are included.}
 
-\item{include}{The list of ComDim information that will be added into a table. Optional.}
+\item{include}{Character vector selecting which score types to include. Accepted values
+(case-insensitive) are \code{"Q.scores"} (global predictive scores),
+\code{"T.scores"} (local predictive scores), \code{"Q.scores.ort"} (global orthogonal
+scores), and \code{"T.scores.ort"} (local orthogonal scores). Defaults to
+\code{c("Q.scores", "T.scores")}.}
 }
 \value{
-A table with the selected information
+A long data frame with one row per sample–component–score-type combination, containing
+  the following columns:
+  \describe{
+    \item{\code{sample.id}}{Sample name (factor).}
+    \item{\code{sample.id.number}}{Integer position of the sample (factor).}
+    \item{\code{block.id}}{Block index, or \code{"Global"} / \code{"Global.ort"} for Q scores.}
+    \item{\code{block.name}}{Block name, or \code{"Global"} / \code{"Global.ort"} for Q scores (factor).}
+    \item{\code{dim}}{Component number.}
+    \item{\code{scores.type}}{One of \code{"Global"}, \code{"Global.ort"}, \code{"Local"}, or \code{"Local.ort"} (factor).}
+    \item{\code{scores.type.dim}}{Concatenation of scores type and component number, e.g. \code{"Q.scores1"} (factor).}
+    \item{\code{value}}{Score value.}
+  }
 }
 \description{
-Creates a long dataframe with the global and local scores (Q.scores and T.scores) suitable for ggplot.
+Creates a long (tidy) data frame with the global and/or local scores from a ComDim model,
+suitable for use with \pkg{ggplot2}.
 }
 \examples{
 b1 <- matrix(rnorm(500), 10, 50) # 10 rows and 50 columns
@@ -35,4 +56,7 @@ b2 <- matrix(rnorm(800), 10, 80) # 10 rows and 80 columns
 mb <- MultiBlock(Data = list(b1 = b1, b2 = b2))
 model <- ComDim_PCA(mb, ndim = 2)
 tbl <- MakeComDimScoresTable(model)
+}
+\seealso{
+\code{\link{MakeComDimLoadingsTable}}, \code{\link{ComDim_PCA}}
 }

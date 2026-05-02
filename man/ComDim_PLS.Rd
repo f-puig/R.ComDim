@@ -73,16 +73,16 @@ A \code{ComDim} object. All slots are populated. Key slots:
     \mathbf{q}_a'\mathbf{X}_b\mathbf{X}_b'\mathbf{q}_a}.}
   \item{\code{R2X}}{Proportion of X variance captured by each component
     (named vector, length \eqn{ndim}).  Let \eqn{\mathbf{t}_a} be the
-    NIPALS PLS X-score vector for component \eqn{a} on the salience-weighted
-    blocks; then
-    \deqn{R2X_a = \|\mathbf{t}_a\|^4 / \sum_k \|\mathbf{t}_k\|^4.}}
+    NIPALS PLS X-score vector for component \eqn{a} on the salience-
+    weighted blocks; then
+    \deqn{R2X_a = \|\mathbf{t}_a\|^4 \big/ \sum_k \|\mathbf{t}_k\|^4.}}
   \item{\code{R2Y}}{Cumulative Y-variance explained (named vector, length
     \eqn{ndim}).  \eqn{R2Y_a} is the \eqn{R^2} from an OLS regression of
     \eqn{\mathbf{Y}} on the first \eqn{a} global scores with an intercept:
     \deqn{R2Y_a = 1 - RSS_a / TSS_Y,}
     where \eqn{RSS_a} is the residual SS when predicting \eqn{\mathbf{Y}}
     from \eqn{[1, \mathbf{q}_1, \ldots, \mathbf{q}_a]}.
-    \strong{Note:} \eqn{R2Y_a} is cumulative -- it reflects the total
+    \strong{Note:} \eqn{R2Y_a} is cumulative — it reflects the total
     Y-variance explained by the first \eqn{a} components together,
     not the marginal contribution of component \eqn{a} alone.}
   \item{\code{Q2}}{Predictive Q2 per response column (PLS-R) or per class
@@ -99,8 +99,9 @@ A \code{ComDim} object. All slots are populated. Key slots:
     where \eqn{PRESSD} sums \eqn{\hat{y}_i^2} for class-0 samples with
     \eqn{\hat{y}_i > 0}, and \eqn{(\hat{y}_i - 1)^2} for class-1 samples
     with \eqn{\hat{y}_i < 1}.  Same cross-validation logic as \code{Q2}.}
-  \item{\code{Singular}}{Squared L2 norm of the NIPALS PLS score vector per
-    component (\eqn{\|\mathbf{t}_a\|^2}), used to derive \code{R2X}.}
+  \item{\code{Singular}}{Squared L2 norm of the NIPALS PLS score vector
+    per component (\eqn{\|\mathbf{t}_a\|^2}), used to derive
+    \code{R2X}.}
   \item{\code{VIP}}{Global VIP scores (named numeric vector, length
     \eqn{p_{tot}}) using the Wold formula:
     \deqn{VIP_j = \sqrt{p_{tot}
@@ -110,14 +111,17 @@ A \code{ComDim} object. All slots are populated. Key slots:
     L2-normalised \eqn{j}-th element of the \eqn{a}-th NIPALS weight
     vector, and \eqn{p_{tot}} is the total number of variables.}
   \item{\code{VIP.block}}{Named list (one \code{data.frame} per block)
-    with columns \code{p} (per-block predictive VIP using block size
-    \eqn{p_b} instead of \eqn{p_{tot}}) and \code{tot} (= \code{p} for PLS;
-    included for consistency with OPLS output).  Row names are variable names.}
+    with columns \code{p} (per-block predictive VIP computed with block
+    size \eqn{p_b} instead of \eqn{p_{tot}}) and \code{tot} (= \code{p}
+    for PLS; included for consistency with OPLS output).  Row names are
+    variable names.}
   \item{\code{PLS.model}}{List with: \code{W} (NIPALS X weight matrix,
     \eqn{p_{tot} \times ndim}); \code{B} (regression coefficients,
     \eqn{p_{tot} \times ncol(Y)},
-    \eqn{\mathbf{B} = \mathbf{W}(\mathbf{P}'\mathbf{W})^{-1}\mathbf{Q}'},
-    in original Y units); \code{B0} (intercept vector, length \eqn{ncol(Y)},
+    \eqn{\mathbf{B} =
+    \mathbf{W}(\mathbf{P}'\mathbf{W})^{-1}\mathbf{Q}'},
+    in original Y units); \code{B0} (intercept vector, length
+    \eqn{ncol(Y)},
     \eqn{\mathbf{B}_0 = \bar{\mathbf{y}} - \bar{\mathbf{x}}\mathbf{B}});
     \code{Y} (original response matrix as supplied).
     Training-set Y predictions:
@@ -134,8 +138,8 @@ A \code{ComDim} object. All slots are populated. Key slots:
     \code{Sensitivity} and \code{Specificity} (named per class),
     \code{confusionMatrix} (named list of 2x2 matrices, one per class).}
   \item{\code{Mean}}{List with \code{MeanMB} (column means per block),
-    \code{MeanY} (column means of Y before any scaling), and \code{ScaleY}
-    (column SDs of Y; all ones when \code{scale.y = FALSE}).}
+    \code{MeanY} (column means of Y before any scaling), and
+    \code{ScaleY} (column SDs of Y; all ones when \code{scale.y = FALSE}).}
   \item{\code{Norm}}{List with \code{NormMB}: Frobenius norms for block
     normalisation.}
   \item{\code{variable.block}}{Character vector (length \eqn{p_{tot}})

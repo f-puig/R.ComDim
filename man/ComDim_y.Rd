@@ -47,10 +47,9 @@ Optional return fields:
   \item{y}{y as used internally by FUN (e.g. after centring/scaling),
     so that \code{ComDim_y} can detect automatic y-transformation and
     back-transform the Q loadings for correct B and B0 computation.}
-  \item{orthoscores}{A numeric matrix (n x k, k >= 1) or a length-n
-    vector of orthogonal X-scores. \strong{Required} when \code{nort > 0}.
-    When k > 1, the jj-th ort pre-loop iteration uses column jj if
-    available, otherwise column 1. FUN does not need to change its
+  \item{orthoscores}{A numeric vector (length n) or single-column matrix
+    of orthogonal X-scores. \strong{Required} when \code{nort = 1}.
+    Only the first column is used. FUN does not need to change its
     behaviour between ort and predictive phases; if it always returns
     \code{orthoscores}, the framework uses it only during the ort phase
     and ignores it during the predictive phase.}
@@ -58,14 +57,14 @@ Optional return fields:
 
 \item{nort}{Number of orthogonal Common Dimensions to extract before the
 predictive loop. Default \code{0} (no orthogonalization, pure PLS-like).
-When \code{nort > 0} the function follows the same two-phase architecture
-as \code{ComDim_OPLS}: orthogonal components are removed from the
+Only \code{nort = 0} or \code{nort = 1} are accepted; for multiple
+orthogonal components use \code{ComDim_OPLS()}.
+When \code{nort = 1} the function follows the same two-phase architecture
+as \code{ComDim_OPLS}: the orthogonal component is removed from the
 (lambda-weighted) concatenated blocks first, then predictive components are
 computed from the orthogonally-deflated blocks. \code{FUN} must return
-\code{output$orthoscores} (a numeric matrix n x k, k >= 1, or a length-n
-vector) when called with \code{ndim = 1}. When k > 1, column jj is used
-during the jj-th ort iteration, which allows FUN to return all ort
-directions at once (e.g. \code{ropls} with \code{orthoI > 1}).
+\code{output$orthoscores} (a numeric vector of length n, or a matrix whose
+first column is used) when called with \code{ndim = 1}.
 Cross-validation is automatically skipped when \code{nort > 0}.}
 
 \item{type}{\code{'regression'} (default) or \code{'discriminant'}.}
@@ -105,13 +104,14 @@ A \code{ComDim} object with the following slots:
 \describe{
   \item{\code{Method}}{The label supplied via the \code{method} argument.}
   \item{\code{ndim}}{Number of predictive Common Dimensions extracted.}
-  \item{\code{Q.scores}}{Global consensus scores matrix (\eqn{n \times ndim}).
-    Each column \eqn{\mathbf{q}_a} (unit-norm) is derived from the dominant
-    left direction of FUN applied to the salience-weighted concatenated blocks.}
-  \item{\code{T.scores}}{Named list of block-specific local scores (\eqn{n
-    \times ndim} each).  Local loading
-    \eqn{\mathbf{p}_{ba} = \tilde{\mathbf{X}}_b'\mathbf{q}_a} (computed on
-    the ort-deflated block when \code{nort > 0}); local score
+  \item{\code{Q.scores}}{Global consensus scores matrix (\eqn{n \times
+    ndim}).  Each column \eqn{\mathbf{q}_a} (unit-norm) is derived from
+    the dominant left direction of FUN applied to the salience-weighted
+    concatenated blocks.}
+  \item{\code{T.scores}}{Named list of block-specific local scores
+    (\eqn{n \times ndim} each).  Local loading
+    \eqn{\mathbf{p}_{ba} = \tilde{\mathbf{X}}_b'\mathbf{q}_a} (computed
+    on the ort-deflated block when \code{nort > 0}); local score
     \eqn{\mathbf{t}_{ba} =
     \tilde{\mathbf{X}}_b\,\mathbf{p}_{ba}(\mathbf{p}_{ba}'\mathbf{p}_{ba})^{-1}}.}
   \item{\code{P.loadings}}{Global loadings (\eqn{p_{tot} \times ndim}):
@@ -124,7 +124,7 @@ A \code{ComDim} object with the following slots:
   \item{\code{R2X}}{Proportion of X variance captured by each predictive
     component (named vector, length \eqn{ndim}).  Let \eqn{\mathbf{t}_a}
     be the X-score vector returned by FUN for component \eqn{a}:
-    \deqn{R2X_a = \|\mathbf{t}_a\|^4 / \sum_k \|\mathbf{t}_k\|^4.}
+    \deqn{R2X_a = \|\mathbf{t}_a\|^4 \big/ \sum_k \|\mathbf{t}_k\|^4.}
     When \code{nort > 0}, the denominator also includes the orthogonal
     \eqn{\|\mathbf{t}_{ort,k}\|^4} terms, and the orthogonal R2X fractions
     are stored separately in \code{Orthogonal$R2X}.}
@@ -136,15 +136,15 @@ A \code{ComDim} object with the following slots:
     \strong{Note:} \eqn{R2Y_a} is cumulative -- the total Y-variance
     explained by the first \eqn{a} components together, not the marginal
     contribution of component \eqn{a} alone.}
-  \item{\code{Q2}}{Predictive Q2 per response column (regression) or per class
-    (discriminant), named accordingly:
+  \item{\code{Q2}}{Predictive Q2 per response column (regression) or per
+    class (discriminant), named accordingly:
     \deqn{Q2 = 1 - PRESS / TSS_Y,}
     where \eqn{PRESS = \sum_i (\hat{y}_i - y_i)^2}.
-    When \code{cv.k >= 2} and \code{nort = 0}: cross-validated (out-of-sample)
-    predictions are used; otherwise training-set predictions.
+    When \code{cv.k >= 2} and \code{nort = 0}: cross-validated (out-of-
+    sample) predictions are used; otherwise training-set predictions.
     CV is automatically skipped when \code{nort > 0}.}
-  \item{\code{DQ2}}{(Discriminant mode only) Discriminant Q2 per class, using
-    only penalising residuals:
+  \item{\code{DQ2}}{(Discriminant mode only) Discriminant Q2 per class,
+    using only penalising residuals:
     \deqn{DQ2 = 1 - PRESSD / TSS_Y,}
     where \eqn{PRESSD} sums \eqn{\hat{y}_i^2} for class-0 samples with
     \eqn{\hat{y}_i > 0}, and \eqn{(\hat{y}_i - 1)^2} for class-1 samples
@@ -172,21 +172,23 @@ A \code{ComDim} object with the following slots:
     the ort loadings), and \code{tot}
     (\eqn{VIPtot_j = \sqrt{(VIPp_j^2 + VIPo_j^2)/2}}).
     Row names are variable names.}
-  \item{\code{PLS.model}}{List with: \code{W} (X weight matrix collected from
-    FUN, \eqn{p_{tot} \times ndim}); \code{B} (regression coefficients,
+  \item{\code{PLS.model}}{List with: \code{W} (X weight matrix collected
+    from FUN, \eqn{p_{tot} \times ndim}); \code{B} (regression
+    coefficients,
     \eqn{\mathbf{B} = \mathbf{W}(\mathbf{P}'\mathbf{W})^{-1}\mathbf{Q}'},
     in original Y units); \code{B0} (intercept,
     \eqn{\mathbf{B}_0 = \bar{\mathbf{y}} -
-    \overline{\tilde{\mathbf{x}}}\mathbf{B}}); \code{Y} (original response
-    matrix as supplied).
+    \overline{\tilde{\mathbf{x}}}\mathbf{B}}); \code{Y} (original
+    response matrix as supplied).
     Training-set predictions:
-    \eqn{\hat{\mathbf{Y}} = \tilde{\mathbf{X}}\mathbf{B} + \mathbf{B}_0}.}
+    \eqn{\hat{\mathbf{Y}} =
+    \tilde{\mathbf{X}}\mathbf{B} + \mathbf{B}_0}.}
   \item{\code{cv}}{Cross-validation results when \code{cv.k >= 2} and
     \code{nort = 0} (empty list otherwise): \code{k}, \code{fold}
-    (sample-to-fold vector), \code{Ypred} (\eqn{n \times ncol(Y)} out-of-
-    sample predictions), \code{Q2} (CV Q2 per class/response), \code{DQ2}
-    (mean CV DQ2, discriminant only), \code{DQ2.perclass} (CV DQ2 per class,
-    discriminant only).}
+    (sample-to-fold vector), \code{Ypred} (\eqn{n \times ncol(Y)}
+    out-of-sample predictions), \code{Q2} (CV Q2 per class/response),
+    \code{DQ2} (mean CV DQ2, discriminant only),
+    \code{DQ2.perclass} (CV DQ2 per class, discriminant only).}
   \item{\code{Orthogonal}}{When \code{nort > 0}: list with \code{nort},
     \code{Q.scores} (global ort scores, \eqn{n \times nort}, unit-norm),
     \code{T.scores} (block ort local scores, \eqn{n \times nort} each),
@@ -280,4 +282,54 @@ resultsOPLS <- ComDim_y(mb,
   cv.k = 0
 )
 
+## Example 3 (not run): ComDim-OPLS-DA via ropls ---------------------------
+# Wrapping ropls::opls is also possible. Key points:
+#   - Use orthoI = 1 (fixed) instead of NA so the output is predictable.
+#   - Always return output$orthoscores; ComDim_y ignores it in phases
+#     where ort has already been removed.
+#   - Expand the single ropls Q loading to match the ncol(y_dummy) width.
+\dontrun{
+fun.OPLSDA.ropls <- function(W, y, ndim, ...) {
+  output <- list()
+  # Convert dummy matrix to ropls-compatible -1/+1 vector
+  Y <- c(-1, 1)[apply(y, 1, function(x) match(1, x))]
+  result <- tryCatch(
+    ropls::opls(
+      x = W, y = Y, predI = 1, orthoI = 1,
+      fig.pdfC = "none", info.txtC = "none"
+    ),
+    error = function(e) {
+      ropls::opls(
+        x = W, y = Y, predI = 1, orthoI = 0,
+        fig.pdfC = "none", info.txtC = "none"
+      )
+    }
+  )
+  output$scores <- result@scoreMN[, 1]
+  output$P <- result@loadingMN[, 1]
+  output$W <- result@weightMN[, 1]
+  output$U <- result@uMN[, 1]
+  # Expand the single ropls Q loading to match the 2-column dummy matrix:
+  # loadings for class1 and class2 are antisymmetric in binary PLS-DA.
+  output$Q <- c(-result@cMN[, 1], result@cMN[, 1])
+  output$y <- result@suppLs$yModelMN # internal y (for scaling detection)
+  # Orthogonal scores (used during the ort pre-loop when nort > 0)
+  if (!is.null(result@orthoScoreMN) && ncol(result@orthoScoreMN) > 0) {
+    output$orthoscores <- result@orthoScoreMN   # n x k matrix; col jj used for jj-th ort
+  } else {
+    output$orthoscores <- matrix(0, nrow = nrow(W), ncol = 1)
+  }
+  return(output)
+}
+
+resultsOPLSDA <- ComDim_y(allMB,
+  y = c(rep("NI", 4), rep("OFF", 4)),
+  ndim = 1,
+  nort = 1, # replaces orthogonalization = TRUE
+  type = "discriminant",
+  FUN = fun.OPLSDA.ropls,
+  method = "OPLS-DA(ropls)",
+  cv.k = 0
+)
+}
 }

@@ -14,7 +14,8 @@ MultiBlock are silently ignored; the order of the retained samples
 follows the order given here.}
 }
 \value{
-The MultiBlock object restricted to the requested samples.
+The MultiBlock object restricted to the requested samples. The \code{Batch} and
+  \code{Metadata} slots are also subsetted and reordered to match.
 }
 \description{
 Retain a subset of samples in a MultiBlock object.
@@ -25,4 +26,7 @@ b2 <- matrix(rnorm(800), 10, 80)
 rownames(b1) <- rownames(b2) <- paste0("sample_", 1:10)
 mb <- MultiBlock(Data = list(b1 = b1, b2 = b2))
 mb <- FilterSamplesMultiBlock(mb, samples = paste0("sample_", 1:5))
+}
+\seealso{
+\code{\link{MultiBlock}}, \code{\link{AddMetadata}}, \code{\link{ProcessMultiBlock}}
 }

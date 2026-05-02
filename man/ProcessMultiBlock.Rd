@@ -16,22 +16,33 @@ ProcessMultiBlock(
 \arguments{
 \item{MB}{A MultiBlock object.}
 
-\item{blocks}{The blocks to process. A vector of integers or block names (optional; all blocks are processed when omitted).}
+\item{blocks}{The blocks to process. A vector of integers or block names. When omitted, all
+blocks are processed.}
 
-\item{vars}{The variables to keep. A list with the same length as 'blocks'. Each element contains the indices of the variables to retain in that block.}
+\item{vars}{The variables to keep. A list with the same length as \code{blocks}. Each element
+contains the indices (integer) or names (character) of the variables to retain in that block.
+Subsetting is applied before any of the \code{FUN} arguments.}
 
-\item{FUN}{The function used for data processing.}
+\item{FUN}{A function applied to each selected block's data matrix (samples x variables). It
+receives the matrix as its sole argument and must return a matrix of the same dimensions.}
 
-\item{FUN.SelectVars}{The function used to select variables. If applied to a numeric data matrix, it should return a vector of TRUE/FALSE with the same length as ncol.}
+\item{FUN.SelectVars}{A function applied to each selected block's data matrix to determine which
+variables to keep. It receives the matrix as its sole argument and must return a logical vector
+of length equal to \code{ncol} of the matrix (\code{TRUE} = keep).}
 
-\item{FUN.SelectBlocks}{The function used to select blocks. If applied to a numeric data matrix, it should return TRUE/FALSE.}
+\item{FUN.SelectBlocks}{A function applied to each selected block's data matrix to determine
+whether the block should be retained. It receives the matrix as its sole argument and must
+return a single \code{TRUE} or \code{FALSE}.}
 }
 \value{
-The MultiBlock
+The processed MultiBlock object, with data matrices transformed and/or blocks/variables
+  removed according to the supplied arguments. Blocks not listed in \code{blocks} are left
+  unchanged.
 }
 \description{
 Apply a custom function to transform a MultiBlock and/or select variables or blocks.
-When multiple functions are supplied, the order of execution is FUN, FUN.SelectVars, FUN.SelectBlocks.
+When multiple operations are supplied, the order of execution is:
+\code{vars} subsetting, then \code{FUN}, then \code{FUN.SelectVars}, then \code{FUN.SelectBlocks}.
 }
 \examples{
 b1 <- matrix(rnorm(500), 10, 50)
@@ -40,4 +51,11 @@ mb <- MultiBlock(Data = list(b1 = b1, b2 = b2))
 # Normalize each block to 0-100 range
 BY100 <- function(x) 100 * (x - min(x)) / (max(x) - min(x))
 mb <- ProcessMultiBlock(mb, FUN = BY100)
+# Keep only variables with non-zero variance
+mb <- ProcessMultiBlock(mb, FUN.SelectVars = function(x) apply(x, 2, var) > 0)
+# Remove blocks where all values are below 0.5
+mb <- ProcessMultiBlock(mb, FUN.SelectBlocks = function(x) max(x) >= 0.5)
+}
+\seealso{
+\code{\link{MultiBlock}}, \code{\link{MultiBlock2Matrix}}
 }
