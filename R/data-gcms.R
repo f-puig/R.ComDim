@@ -12,7 +12,7 @@
 #' @author  Cabrero et al. (2019) Scientific data 6:256
 #' (\doi{10.1038/s41597-019-0202-7})
 #'
-#' @source \href{https://www.ebi.ac.uk/metabolights/editor/MTBLS283/overview}{Metabolights}
+#' @source \href{https://www.ebi.ac.uk/metabolights/editor/MTBLS283}{Metabolights}
 #'
 #' @examples
 #' data(dataset3)

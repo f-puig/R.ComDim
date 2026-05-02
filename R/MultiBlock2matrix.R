@@ -110,7 +110,7 @@ MultiBlock2Matrix <- function(MB = MB,
       mat <- cbind(mat, MB@Data[[i]][, vars[[j]], drop = FALSE])
     }
 
-    names_new <- MB@Variables[[i]]
+    names_new <- MB@Variables[[i]][vars[[j]]]
     if (any(names_new %in% cnames)) {
       common <- TRUE
       rep_names <- append(rep_names, names_new[which(names_new %in% cnames)])
