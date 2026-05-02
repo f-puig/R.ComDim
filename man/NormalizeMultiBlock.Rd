@@ -2,10 +2,10 @@
 % Please edit documentation in R/NormalizeMultiBlock.R
 \name{NormalizeMultiBlock}
 \alias{NormalizeMultiBlock}
-\title{NARemoveMultiBlock}
+\title{NormalizeMultiBlock}
 \usage{
 NormalizeMultiBlock(
-  MB = MB,
+  MB,
   blocks = NULL,
   method = c("none", "auto", "mean", "pareto", "norm", "geometric", "ranknorm")[5],
   infinite.as.NA = FALSE,
@@ -15,32 +15,43 @@ NormalizeMultiBlock(
 )
 }
 \arguments{
-\item{MB}{The multi-blocks structure.}
+\item{MB}{The MultiBlock object.}
 
-\item{blocks}{The blocks to apply the normalization. It can be a vector of integers or a vector with the block names. Facultative.}
+\item{blocks}{Blocks to normalize. A vector of integers or block names
+(optional; all blocks are processed when omitted).}
 
-\item{method}{The method to use for data normalization. 'none' will not do any transformation besides replacing the Inf values to NA if infinite.as.NA is set to TRUE. 'auto' stands for auto-scaling, 'mean' for mean-centering, 'pareto' for Pareto transform (mean-centered and divided by the square root of the standard deviation), 'norm' for mean-centered and divided by its norm, 'geometric' for geometric mean transform, and 'ranknorm' for the rank-based inverse normal transform.}
+\item{method}{Normalization method. One of: \code{'none'} (no
+transformation beyond optional Inf-to-NA conversion), \code{'auto'}
+(auto-scaling), \code{'mean'} (mean-centering), \code{'pareto'}
+(mean-centered and divided by the square root of the SD), \code{'norm'}
+(mean-centered and divided by its Frobenius norm), \code{'geometric'}
+(geometric mean scaling), \code{'ranknorm'} (rank-based inverse normal
+transform). Default: \code{'norm'}.}
 
-\item{infinite.as.NA}{If TRUE, Infinite values are converted to NA. The presence of NA or Inf values will cause ComDim to stop, but they can be transformed to numerical values with the functions 'NARemoveMultiBlock' and 'InfRemoveMultiBlock', respectively.}
+\item{infinite.as.NA}{If \code{TRUE}, Infinite values are converted to NA
+before normalization. The presence of NA or Inf values will cause ComDim
+to stop; use \code{\link{NAInfRemoveMultiBlock}} to handle them.}
 
-\item{constant}{For the 'geometric' method, the value added to each element in the multi-block. The default number is 0.}
+\item{constant}{For \code{'geometric'}: value added to each element before
+computing the geometric mean (useful when data contain zeros). Default: 0.}
 
-\item{offset}{For the 'ranknorm' method. Defaults to (3/8), correspond to the Blom transform.}
+\item{offset}{For \code{'ranknorm'}: offset in the Blom-type transform.
+Default: 3/8 (Blom transform).}
 
-\item{showWarning}{If TRUE, it will return a warning in case there is any variable with only NAs in the multi-block.}
+\item{showWarning}{If \code{TRUE}, warn when all-NA variables are
+discarded. Default: \code{TRUE}.}
 }
 \value{
-The multi-block
+The normalized MultiBlock object.
 }
 \description{
-Normalize all blocks from a multi-block structure. The ranknorm transform is based on that from the RNOmni package (genomedoi:10.1111/biom.13214).
+Normalize all blocks from a MultiBlock object. The ranknorm transform is
+based on that from the RNOmni package (doi:10.1111/biom.13214).
 }
 \examples{
-b1 = matrix(rnorm(500),10,50)
-b2 = matrix(rnorm(800),10,80)
-b2[c(2,3,5),c(1,2,3)] <- NA
-# Build multi-block by adding one data block at a time:
-mb <- BuildMultiBlock(b1, newSamples = paste0('sample_',1:10))
-mb <- BuildMultiBlock(b2, growingMB = mb)
-mb <- NormalizeMultiBlock(mb, method = 'auto')
+b1 <- matrix(rnorm(500), 10, 50)
+b2 <- matrix(rnorm(800), 10, 80)
+b2[c(2, 3, 5), c(1, 2, 3)] <- NA
+mb <- MultiBlock(Data = list(b1 = b1, b2 = b2))
+mb <- NormalizeMultiBlock(mb, method = "auto")
 }

@@ -8,21 +8,21 @@
 An object of class \code{data.frame} with 16890 rows and 2 columns.
 }
 \source{
-\href{https://www.ebi.ac.uk/arrayexpress/experiments/E-MTAB-8834/}{ARRAYEXPRESS}
+\href{https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-8834}{ARRAYEXPRESS}
 }
 \usage{
-data(metadata_RNAseq3)
+data(mouse_ds)
 }
 \description{
 Metadata for the RNAseq data of cell extracts
 }
 \examples{
 data(mouse_ds)
-#' RNAseqMB <- ExpandMB(data = RNAseq3[,1:12], metadata = metadata_RNAseq3,
+#' RNAseqMB <- ExpandMB(data = RNAseq3, metadata = metadata_RNAseq3,
 #'   minblock = 500, loquace = FALSE)
 }
 \author{
 Radic Shechter et al. (2021) Molecular Systems Biology 17:e10141
-(\href{https://doi.org/10.15252/msb.202010141}{DOI})
+(\doi{10.15252/msb.202010141})
 }
 \keyword{dataset}

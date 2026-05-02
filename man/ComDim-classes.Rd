@@ -3,7 +3,6 @@
 \docType{class}
 \name{ComDim-classes}
 \alias{ComDim-classes}
-\alias{MultiBlock}
 \alias{ComDim}
 \title{MultiBlock object}
 \description{
@@ -24,7 +23,7 @@ the slot will be filled with integers.}
 not available, the slot will be filled with integers.}
 
 \item{\code{Batch}}{A list with the vectors with the batch information for each
-data-block. Facultative.}
+data-block. Optional.}
 
 \item{\code{Metadata}}{A list with the samples metadata.}
 
@@ -58,8 +57,8 @@ Y-block.}
 
 \item{\code{Norm}}{The norm values for each variable in the MultiBlock.}
 
-\item{\code{PLS.model}}{For ComDim analyses using PLS as core algorithm, it contains
-the W, B, B0 and Y).}
+\item{\code{PLS.model}}{For ComDim analyses using PLS as the core algorithm, contains
+the W, B, B0 and Y matrices.}
 
 \item{\code{cv}}{For ComDim_KOPLS, it contains the index of the samples used during
 the cross-validation.}
@@ -68,10 +67,9 @@ the cross-validation.}
 sample classification, the sensitivity, the specificity, and a confusion
 matrix.}
 
-\item{\code{Metadata}}{vector with the sample names. If this data is not available,
-the slot will be filled with integers.}
+\item{\code{Metadata}}{A list with the per-sample metadata for each block.}
 
-\item{\code{variable.block}}{A vector with the same length than the P.loadings
+\item{\code{variable.block}}{A vector with the same length as the P.loadings,
 indicating the block each variable belongs to.}
 
 \item{\code{runtime}}{The used running time.}

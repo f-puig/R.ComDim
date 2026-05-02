@@ -5,23 +5,24 @@
 \alias{RNAseq3}
 \title{RNAseq data of cell extracts}
 \format{
-An object of class \code{data.frame} with 9254 rows and 13 columns.
+An object of class \code{matrix} (inherits from \code{array}) with 12 rows and 9254 columns.
 }
 \source{
-\href{https://www.ebi.ac.uk/arrayexpress/experiments/E-MTAB-8834/}{ARRAYEXPRESS}
+\href{https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-8834}{ARRAYEXPRESS}
 }
 \usage{
-data(RNAseq3)
+data(mouse_ds)
 }
 \description{
 RNAseq data of cell extracts
 }
 \examples{
 data(mouse_ds)
-#' MB <- BuildMultiBlock(t(RNAseq3[,1:12]), t(lipids), t(intra), t(extra))
+# MB <- MultiBlock(Data = list(RNAseq3 = RNAseq3,
+#   lipids = lipids, intra = intra, extra = extra))
 }
 \author{
 Radic Shechter et al. (2021) Molecular Systems Biology 17:e10141
-(\href{https://doi.org/10.15252/msb.202010141}{DOI})
+(\doi{10.15252/msb.202010141})
 }
 \keyword{dataset}

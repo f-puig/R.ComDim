@@ -2,7 +2,7 @@
 % Please edit documentation in R/SplitRW.R
 \name{SplitRW}
 \alias{SplitRW}
-\title{SplitRW - Building the RW list compatible with ComDim_PCA().}
+\title{SplitRW}
 \usage{
 SplitRW(
   MB = MB,
@@ -12,7 +12,7 @@ SplitRW(
 )
 }
 \arguments{
-\item{MB}{The multi-block structure built with BuildMultiblock().}
+\item{MB}{The multi-block structure built with \code{MultiBlock()}.}
 
 \item{checkSampleCorrespondence}{If FALSE, the same number of samples and the sample order are assumed for all the batches. If TRUE, only the samples found in all replicate blocks will be included in the final structure.}
 
@@ -27,12 +27,14 @@ The list containing the multi-block composed of the replicate-blocks.
 To split a multi-block into a list containing smaller blocks, comprising each data from one batch.
 }
 \examples{
-b1 = matrix(rnorm(500),10,50)
-batch_b1 = rep(1,10)
-b2 = matrix(rnorm(800),30,80)
-batch_b2 = c(rep(1,10),rep(2,10),rep(3,10))
-# Generate the multi-block (mb)
-mb <- BuildMultiBlock(b1, batches = batch_b1)
-mb <- BuildMultiBlock(b2, growingMB = mb, batches = batch_b2, equalSampleNumber = FALSE)
+b1 <- matrix(rnorm(1500), 30, 50)
+b2 <- matrix(rnorm(2400), 30, 80)
+batch_b <- c(rep(1, 10), rep(2, 10), rep(3, 10))
+# Generate the multi-block (mb) with 3 batches of 10 samples each
+mb <- MultiBlock(
+  Data = list(b1 = b1, b2 = b2),
+  Batch = list(b1 = batch_b, b2 = batch_b),
+  ignore.names = TRUE
+)
 rw <- SplitRW(mb)
 }

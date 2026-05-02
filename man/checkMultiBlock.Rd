@@ -2,7 +2,7 @@
 % Please edit documentation in R/ComDim-classes.R
 \name{checkMultiBlock}
 \alias{checkMultiBlock}
-\title{ComDim - Finding common dimensions in multi-block datasets}
+\title{checkMultiBlock}
 \usage{
 checkMultiBlock(object)
 }
@@ -10,8 +10,9 @@ checkMultiBlock(object)
 \item{object}{A MultiBlock object.}
 }
 \value{
-The building of the MultiBlock is interrupted if an error is found.
+TRUE if valid, or a character vector of error messages.
 }
 \description{
 Validation function used during MultiBlock building.
 }
+\keyword{internal}

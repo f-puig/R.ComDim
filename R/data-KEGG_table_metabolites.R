@@ -10,9 +10,9 @@
 #' @keywords dataset
 #'
 #' @author  Radic Shechter et al. (2021) Molecular Systems Biology 17:e10141
-#' (\href{https://doi.org/10.15252/msb.202010141}{DOI})
+#' (\doi{10.15252/msb.202010141})
 #'
-#' @source \href{https://doi.org/10.15252/msb.202010141}{DOI}
+#' @source \doi{10.15252/msb.202010141}
 #'
 #' @examples
 #' data(mouse_ds)

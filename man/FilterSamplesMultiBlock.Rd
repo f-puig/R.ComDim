@@ -2,18 +2,27 @@
 % Please edit documentation in R/FilterSamplesMultiBlock.R
 \name{FilterSamplesMultiBlock}
 \alias{FilterSamplesMultiBlock}
-\title{ComDim - Finding common dimensions in multi-block datasets}
+\title{FilterSamplesMultiBlock}
 \usage{
-FilterSamplesMultiBlock(MB = MB, samples = getSampleNames(MB))
+FilterSamplesMultiBlock(MB, samples = sampleNames(MB))
 }
 \arguments{
-\item{MB}{A MultiBlock object for which prediction is desired.}
+\item{MB}{A MultiBlock object.}
 
-\item{samples}{A vector containing the names of the samples to keep.}
+\item{samples}{A vector of sample names to keep. Names not found in the
+MultiBlock are silently ignored; the order of the retained samples
+follows the order given here.}
 }
 \value{
-A ComDim object.
+The MultiBlock object restricted to the requested samples.
 }
 \description{
-Predict_MB applies an existent ComDim model to a MultiBlock object.
+Retain a subset of samples in a MultiBlock object.
+}
+\examples{
+b1 <- matrix(rnorm(500), 10, 50)
+b2 <- matrix(rnorm(800), 10, 80)
+rownames(b1) <- rownames(b2) <- paste0("sample_", 1:10)
+mb <- MultiBlock(Data = list(b1 = b1, b2 = b2))
+mb <- FilterSamplesMultiBlock(mb, samples = paste0("sample_", 1:5))
 }

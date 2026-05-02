@@ -7,7 +7,7 @@
 MultiAssayExperiment2MultiBlock(se, colData_samplenames = NULL, Batch = NULL)
 }
 \arguments{
-\item{se}{The SummarizedExperiment .}
+\item{se}{The MultiAssayExperiment object.}
 
 \item{colData_samplenames}{Character string with the column metadata. If colData_samplenames is NULL, the metadata will not be stored.}
 
@@ -17,5 +17,5 @@ MultiAssayExperiment2MultiBlock(se, colData_samplenames = NULL, Batch = NULL)
 The MultiBlock.
 }
 \description{
-Converts a MultiAssayExperiment2MultiBlock into a MultiBlock.
+Converts a MultiAssayExperiment into a MultiBlock.
 }

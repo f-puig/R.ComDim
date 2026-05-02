@@ -11,7 +11,7 @@ SelectFeaturesRW(
   blocks = NULL,
   threshold_cor = 1,
   threshold_cov = 1,
-  mean.RW = T,
+  mean.RW = TRUE,
   plots = "NO"
 )
 }
@@ -39,13 +39,18 @@ An object with 2 lists. The first list contains the important variables presenti
 Finds the important variables presenting a coordinated response in all the replicate-blocks
 }
 \examples{
- b1 = matrix(rnorm(500),10,50)
- batch_b1 = rep(1,10)
- b2 = matrix(rnorm(800),30,80)
- batch_b2 = c(rep(1,10),rep(2,10),rep(3,10))
- mb <- BuildMultiBlock(b1, batches = batch_b1)
- mb <- BuildMultiBlock(b2, growingMB = mb, batches = batch_b2, equalSampleNumber = FALSE)
- rw <- SplitRW(mb)
- results<-ComDim_PCA(rw, 2) # In this analysis, we used 2 components.
- features <- SelectFeaturesRW(RW = rw, results = results, ndim = 1, blocks = c(2,3,4))
+\dontrun{
+b1 <- matrix(rnorm(500), 10, 50)
+batch_b1 <- rep(1, 10)
+b2 <- matrix(rnorm(800), 30, 80)
+batch_b2 <- c(rep(1, 10), rep(2, 10), rep(3, 10))
+mb <- MultiBlock(
+  Data = list(b1 = b1, b2 = b2),
+  Batch = list(b1 = batch_b1, b2 = batch_b2),
+  ignore.names = TRUE, ignore.size = TRUE
+)
+rw <- SplitRW(mb)
+results <- ComDim_PCA(rw, 2)
+features <- SelectFeaturesRW(RW = rw, results = results, ndim = 1, blocks = c(2, 3, 4))
+}
 }

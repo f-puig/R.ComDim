@@ -9,33 +9,67 @@ MultiBlock(
   Data,
   Variables = NULL,
   Batch = NULL,
-  Metadata = NULL
+  Metadata = NULL,
+  ignore.names = FALSE,
+  ignore.size = FALSE
 )
 }
 \arguments{
-\item{Samples}{The vector with the sample names. Facultative.}
+\item{Samples}{A vector of sample names shared across all blocks (optional).
+When omitted, sample names are taken from the row names of each block.
+If no row names exist and all blocks have the same number of rows,
+samples are numbered as integers. Use \code{ignore.names} or
+\code{ignore.size} for more flexible behaviour.}
 
-\item{Data}{A list with the data-blocks. They can be matrices, data.frames or MultiBlocks.}
+\item{Data}{A named list of matrices or data.frames (one entry per block).}
 
-\item{Variables}{The vector with the variable names. Facultative.}
+\item{Variables}{A named list of variable-name vectors, one per block
+(optional). When omitted, column names are taken from each block; if
+absent, variables are numbered as integers.}
 
-\item{Batch}{A list with the vectors of the batch information. Facultative.}
+\item{Batch}{A named list of batch vectors, one per block (optional).}
 
-\item{Metadata}{A list with the metadata information of each data-block.}
+\item{Metadata}{A named list of metadata data.frames, one per block
+(optional).}
+
+\item{ignore.names}{If TRUE, sample names are not checked across blocks.
+All blocks must have the same number of rows unless \code{ignore.size}
+is also TRUE.}
+
+\item{ignore.size}{If TRUE (only meaningful when \code{ignore.names = TRUE}),
+blocks with different row counts are accepted. The resulting MultiBlock
+stores a per-block Samples list and is not directly suitable for ComDim
+(use \code{SplitRW()} first).}
 }
 \value{
-The MultiBlock
+A MultiBlock object.
 }
 \description{
-Combines the blocks of a MultiBlock into a matrix. Useful for calculating summary information of the whole MB (ex. maximum value).
+Creates a MultiBlock object from a named list of data blocks.
 }
 \examples{
-b1 = matrix(rnorm(500),10,50) # 10 rows and 50 columns
-b2 = as.data.frame(matrix(rnorm(800),10,80)) # 10 rows and 80 columns
-b2[c(2,3,4),c(5,7,8)] <- NA # Making some data missing, just for fun.
-rownames(b2) <- LETTERS[5:14] # Adding some sample names
-b3 = MultiBlock(Samples = 1:10,
-                Data = list(s1 = b1, s2 = b2),
-                Variables = list(s1 = 1:ncol(b1),
-                                 s2 = 1:ncol(b2)))
+b1 <- matrix(rnorm(500), 10, 50) # 10 samples, 50 variables
+b2 <- matrix(rnorm(800), 10, 80) # 10 samples, 80 variables
+# Minimal call: Samples and Variables are filled in automatically.
+mb <- MultiBlock(Data = list(b1 = b1, b2 = b2))
+
+# With explicit sample names (enables cross-block alignment):
+rownames(b1) <- paste0("s", 1:10)
+rownames(b2) <- paste0("s", 1:10)
+mb <- MultiBlock(Data = list(b1 = b1, b2 = b2))
+
+# Blocks with different row counts (replicate design):
+b3 <- matrix(rnorm(800), 30, 80)
+batch_b3 <- c(rep(1, 10), rep(2, 10), rep(3, 10))
+mb3 <- MultiBlock(
+  Data = list(b3 = b3), Batch = list(b3 = batch_b3),
+  ignore.names = TRUE, ignore.size = TRUE
+)
+}
+\references{
+Puig-Castellví F, Jouan-Rimbaud Bouveresse D, Mazéas L, Chapleur O, Rutledge DN (2021).
+  Rearrangement of incomplete multi-omics datasets combined with ComDim for evaluating replicate
+  cross-platform variability and batch influence.
+  \emph{Chemometrics and Intelligent Laboratory Systems}, 218, 104422.
+  \doi{10.1016/j.chemolab.2021.104422}
 }

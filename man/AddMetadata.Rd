@@ -4,37 +4,36 @@
 \alias{AddMetadata}
 \title{AddMetadata}
 \usage{
-AddMetadata(
-  newBlock = newBlock,
-  newVars = NULL,
-  newSamples = NULL,
-  batches = NULL,
-  metadata = NULL
-)
+AddMetadata(MB, block = NULL, batches = NULL, metadata = NULL)
 }
 \arguments{
-\item{newBlock}{The data to be incorporated into the MultiBlock structure. It can be a matrix or a data.frame.}
+\item{MB}{A MultiBlock object.}
 
-\item{newVars}{The variable names (optional). If NULL, variables names will be taken from the column names in newBlock. If none of them exist, variables will be identified with integers.}
+\item{block}{The name of the block to modify (character). If \code{NULL} and
+the MultiBlock contains a single block, that block is used automatically.
+To modify several blocks at once, pass a character vector of block names.}
 
-\item{newSamples}{The sample names (optional). The sample replicates should have the same name. If NULL, sample names will be taken from the row names in newBlock if there are. If none of them exist, samples will be identified with integers.}
+\item{batches}{A numeric vector of batch labels, one per sample in the
+target block. Replaces any existing Batch entry for that block.}
 
-\item{batches}{A vector indicating the batch number for every sample (optional).}
-
-\item{metadata}{A data.frame descriptive of newBlock (optional).}
+\item{metadata}{A data.frame with one row per sample in the target block.
+Replaces any existing Metadata entry for that block.}
 }
 \value{
-The MultiBlock
+The updated MultiBlock.
 }
 \description{
-Creates a MultiBlock object containing only one block. This function is used when Batch or Metadata information must be added.
+Adds or overwrites batch and/or metadata information for one or more blocks
+of an existing MultiBlock object.
 }
 \examples{
- b1 = matrix(rnorm(500),10,50) # 10 rows and 50 columns
- b2 = matrix(rnorm(800),10,80) # 10 rows and 80 columns
- b3 = matrix(rnorm(700),10,70) # 10 rows and 70 columns
- # Build AddMetadata by adding one data block at a time:
- mb <- AddMetadata(b1, newSamples = paste0('sample_',1:10))
- mb <- AddMetadata(b2, growingMB = mb)
- mb <- AddMetadata(b3, growingMB = mb)
+b1 <- matrix(rnorm(500), 10, 50) # 10 samples, 50 variables
+b2 <- matrix(rnorm(800), 10, 80) # 10 samples, 80 variables
+batch_b1 <- rep(1, 10)
+meta_b1 <- data.frame(condition = rep(c("A", "B"), 5))
+mb <- MultiBlock(Data = list(b1 = b1, b2 = b2))
+# Add batch information to block 'b1':
+mb <- AddMetadata(mb, block = "b1", batches = batch_b1)
+# Add (or overwrite) metadata for block 'b1':
+mb <- AddMetadata(mb, block = "b1", metadata = meta_b1)
 }

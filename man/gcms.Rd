@@ -18,10 +18,10 @@ GCMS data on cell differentiation
 }
 \examples{
 data(dataset3)
-mb_d3 <- BuildMultiBlock(gcms)
+mb_d3 <- MultiBlock(Data = list(gcms = gcms))
 }
 \author{
 Cabrero et al. (2019) Scientific data 6:256
-(\href{https://doi.org/10.1038/s41597-019-0202-7}{DOI})
+(\doi{10.1038/s41597-019-0202-7})
 }
 \keyword{dataset}

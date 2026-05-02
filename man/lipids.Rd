@@ -5,10 +5,10 @@
 \alias{lipids}
 \title{Lipid profiles of cell extracts}
 \format{
-An object of class \code{matrix} (inherits from \code{array}) with 437 rows and 12 columns.
+An object of class \code{matrix} (inherits from \code{array}) with 12 rows and 437 columns.
 }
 \source{
-\href{https://doi.org/10.15252/msb.202010141}{DOI}
+\doi{10.15252/msb.202010141}
 }
 \usage{
 data(mouse_ds)
@@ -18,10 +18,11 @@ Lipid profiles of cell extracts
 }
 \examples{
 data(mouse_ds)
-#' MB <- BuildMultiBlock(t(RNAseq3[,1:12]), t(lipids), t(intra), t(extra))
+# MB <- MultiBlock(Data = list(RNAseq3 = RNAseq3,
+#   lipids = lipids, intra = intra, extra = extra))
 }
 \author{
 Radic Shechter et al. (2021) Molecular Systems Biology 17:e10141
-(\href{https://doi.org/10.15252/msb.202010141}{DOI})
+(\doi{10.15252/msb.202010141})
 }
 \keyword{dataset}

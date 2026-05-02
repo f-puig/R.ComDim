@@ -2,7 +2,7 @@
 % Please edit documentation in R/MakeComDimScoresTable.R
 \name{MakeComDimScoresTable}
 \alias{MakeComDimScoresTable}
-\title{MakeComDimTable}
+\title{MakeComDimScoresTable}
 \usage{
 MakeComDimScoresTable(
   model,
@@ -15,13 +15,13 @@ MakeComDimScoresTable(
 \arguments{
 \item{model}{The output from a ComDim analysis.}
 
-\item{blocks}{The blocks from which the data will be extracted. It can be a vector of integers or a vector with the block names. Facultative.}
+\item{blocks}{The blocks from which the data will be extracted. It can be a vector of integers or a vector with the block names. Optional.}
 
-\item{dim}{The dimensions from which the data will be extracted. It can be a vector of integers. Facultative.}
+\item{dim}{The dimensions from which the data will be extracted. It can be a vector of integers. Optional.}
 
-\item{dim.ort}{The orthogonal dimensions from which the data will be extracted. It can be a vector of integers. If NULL, all orthogonal components are extracted. If 0, none of the orthogonal components are extracted. Facultative.}
+\item{dim.ort}{The orthogonal dimensions from which the data will be extracted. It can be a vector of integers. If NULL, all orthogonal components are extracted. If 0, none of the orthogonal components are extracted. Optional.}
 
-\item{include}{The list of ComDim information that will be added into a table. Facultative.}
+\item{include}{The list of ComDim information that will be added into a table. Optional.}
 }
 \value{
 A table with the selected information
@@ -30,15 +30,9 @@ A table with the selected information
 Creates a long dataframe with the global and local scores (Q.scores and T.scores) suitable for ggplot.
 }
 \examples{
-b1 = matrix(rnorm(500),10,50) # 10 rows and 50 columns
-b2 = matrix(rnorm(800),10,80) # 10 rows and 80 columns
-b3 = matrix(rnorm(700),10,70) # 10 rows and 70 columns
-b4 = matrix(rnorm(500),10,50) # 10 rows and 50 columns
-# Build multi-block by adding one data block at a time:
-mb <- BuildMultiBlock(b1, newSamples = paste0('sample_',1:10))
-mb <- BuildMultiBlock(b2, growingMB = mb)
-mb2 <- BuildMultiBlock(b3, newSamples = paste0('sample_',1:10))
-mb2 <- BuildMultiBlock(b4, growingMB = mb2)
-# Combine the two multi-blocks:
-mb3 <- CombineMultiBlock(newMB = mb1, growingMB = mb2)
+b1 <- matrix(rnorm(500), 10, 50) # 10 rows and 50 columns
+b2 <- matrix(rnorm(800), 10, 80) # 10 rows and 80 columns
+mb <- MultiBlock(Data = list(b1 = b1, b2 = b2))
+model <- ComDim_PCA(mb, ndim = 2)
+tbl <- MakeComDimScoresTable(model)
 }

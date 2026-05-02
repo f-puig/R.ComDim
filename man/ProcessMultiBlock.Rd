@@ -14,11 +14,11 @@ ProcessMultiBlock(
 )
 }
 \arguments{
-\item{MB}{The MultiBlocks structure.}
+\item{MB}{A MultiBlock object.}
 
-\item{blocks}{The blocks to apply the processing. It can be a vector of integers or a vector with the block names. Facultative.}
+\item{blocks}{The blocks to process. A vector of integers or block names (optional; all blocks are processed when omitted).}
 
-\item{vars}{The variables to kept. It is a list object with the same length as 'blocks'. Each element in the list contains the position of the variables in the nth block.}
+\item{vars}{The variables to keep. A list with the same length as 'blocks'. Each element contains the indices of the variables to retain in that block.}
 
 \item{FUN}{The function used for data processing.}
 
@@ -30,17 +30,14 @@ ProcessMultiBlock(
 The MultiBlock
 }
 \description{
-Apply a custom function to Process the MultiBlocks and/or to select some blocks. If multiple functions are used, the order followed is FUN, FUN.SelectVars, and FUN.SelecBlocks.
+Apply a custom function to transform a MultiBlock and/or select variables or blocks.
+When multiple functions are supplied, the order of execution is FUN, FUN.SelectVars, FUN.SelectBlocks.
 }
 \examples{
-b1 = matrix(rnorm(500),10,50)
-b2 = matrix(rnorm(800),10,80)
-# Build MultiBlock by adding one data block at a time:0))
-mb <- BuildMultiBlock(b1, newSamples = paste0('sample_',1:1
-mb <- BuildMultiBlock(b2, growingMB = mb)
-# Prepare custom functions
-BY100 <- function(x) { 100*(x/max(x)) } # Normalize each block to 100\%
-norm100000 <- function(x){norm(x)>100000} # Keep blocks with a norm higher than 100000.
-thr5 <- function(x) {x > max(x, na.rm = TRUE) * 0.05} # Keep variables larger than 5\% in the block.
-mb <- ProcessMultiBlock(MB, FUN = BY100, FUN.SelectBlocks = norm100000, FUN.SelectVars = thr5)
+b1 <- matrix(rnorm(500), 10, 50)
+b2 <- matrix(rnorm(800), 10, 80)
+mb <- MultiBlock(Data = list(b1 = b1, b2 = b2))
+# Normalize each block to 0-100 range
+BY100 <- function(x) 100 * (x - min(x)) / (max(x) - min(x))
+mb <- ProcessMultiBlock(mb, FUN = BY100)
 }

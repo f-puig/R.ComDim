@@ -8,7 +8,7 @@
 An object of class \code{data.frame} with 437 rows and 2 columns.
 }
 \source{
-\href{https://doi.org/10.15252/msb.202010141}{DOI}
+\doi{10.15252/msb.202010141}
 }
 \usage{
 data(mouse_ds)
@@ -23,6 +23,6 @@ data(mouse_ds)
 }
 \author{
 Radic Shechter et al. (2021) Molecular Systems Biology 17:e10141
-(\href{https://doi.org/10.15252/msb.202010141}{DOI})
+(\doi{10.15252/msb.202010141})
 }
 \keyword{dataset}

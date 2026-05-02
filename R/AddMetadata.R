@@ -1,118 +1,76 @@
-# Previously known as BuildMultiBlock. Now only used when there is metadata or batch to add.
-# This function will change completely since it will be based on MultiBlock().
-AddMetadata <- function(newBlock = newBlock, newVars = NULL, newSamples = NULL,
-                        batches = NULL, metadata = NULL) {
-
-
 #' AddMetadata
 #'
-#' Creates a MultiBlock object containing only one block. This function is used when Batch or Metadata information must be added.
-#' @param newBlock The data to be incorporated into the MultiBlock structure. It can be a matrix or a data.frame.
-#' @param newVars The variable names (optional). If NULL, variables names will be taken from the column names in newBlock. If none of them exist, variables will be identified with integers.
-#' @param newSamples The sample names (optional). The sample replicates should have the same name. If NULL, sample names will be taken from the row names in newBlock if there are. If none of them exist, samples will be identified with integers.
-#' @param batches A vector indicating the batch number for every sample (optional).
-#' @param metadata A data.frame descriptive of newBlock (optional).
-#' @return The MultiBlock
+#' Adds or overwrites batch and/or metadata information for one or more blocks
+#' of an existing MultiBlock object.
+#' @param MB A MultiBlock object.
+#' @param block The name of the block to modify (character). If \code{NULL} and
+#'   the MultiBlock contains a single block, that block is used automatically.
+#'   To modify several blocks at once, pass a character vector of block names.
+#' @param batches A numeric vector of batch labels, one per sample in the
+#'   target block. Replaces any existing Batch entry for that block.
+#' @param metadata A data.frame with one row per sample in the target block.
+#'   Replaces any existing Metadata entry for that block.
+#' @return The updated MultiBlock.
+#' @seealso \code{\link{MultiBlock}}, \code{\link{FilterSamplesMultiBlock}}
 #' @examples
-#'  b1 = matrix(rnorm(500),10,50) # 10 rows and 50 columns
-#'  b2 = matrix(rnorm(800),10,80) # 10 rows and 80 columns
-#'  b3 = matrix(rnorm(700),10,70) # 10 rows and 70 columns
-#'  # Build AddMetadata by adding one data block at a time:
-#'  mb <- AddMetadata(b1, newSamples = paste0('sample_',1:10))
-#'  mb <- AddMetadata(b2, growingMB = mb)
-#'  mb <- AddMetadata(b3, growingMB = mb)
+#' b1 <- matrix(rnorm(500), 10, 50) # 10 samples, 50 variables
+#' b2 <- matrix(rnorm(800), 10, 80) # 10 samples, 80 variables
+#' batch_b1 <- rep(1, 10)
+#' meta_b1 <- data.frame(condition = rep(c("A", "B"), 5))
+#' mb <- MultiBlock(Data = list(b1 = b1, b2 = b2))
+#' # Add batch information to block 'b1':
+#' mb <- AddMetadata(mb, block = "b1", batches = batch_b1)
+#' # Add (or overwrite) metadata for block 'b1':
+#' mb <- AddMetadata(mb, block = "b1", metadata = meta_b1)
 #' @export
+AddMetadata <- function(MB, block = NULL, batches = NULL, metadata = NULL) {
+  if (!is(MB, "MultiBlock")) {
+    stop("'MB' must be a MultiBlock object.")
+  }
 
-  if(!(is.matrix(newBlock))){
-    if(!(is.data.frame(newBlock))){
-      stop('newBlock is not a matrix nor a data frame.')
+  if (is.null(block)) {
+    if (length(MB@Data) == 1) {
+      block <- names(MB@Data)
     } else {
-      newBlock <- as.matrix(newBlock)
+      stop("'block' must be specified when the MultiBlock contains more than one block.")
     }
   }
 
-  # Check newVars
-  if (is.null(newVars)) {
-    if (is.null(colnames(newBlock))){
-      newVars <- seq(1,ncol(newBlock),1)
-    } else {
-      newVars <- colnames(newBlock)
-    }
-  } else {
-    if (ncol(newBlock) != length(newVars)) {
-      print(sprintf('Please use a newVars object with %s items.', ncol(newBlock)))
-      stop('The length of newVars is incorrect.')
-    }
+  if (!all(block %in% names(MB@Data))) {
+    missing_blocks <- block[!block %in% names(MB@Data)]
+    stop(sprintf(
+      "Block(s) not found in MultiBlock: %s",
+      paste(missing_blocks, collapse = ", ")
+    ))
   }
 
-  # Check newSamples
-  if (is.null(newSamples)) {
-    if (is.null(rownames(newBlock))){
-      newSamples <- seq(1,nrow(newBlock),1)
-    }
-  } else {
-    if (nrow(newBlock) != length(newSamples)) {
-      print(sprintf('Please use a newSamples object with %s items.', nrow(newBlock)))
-      stop('The length of newSamples is incorrect.')
-    }
-  }
+  for (blk in block) {
+    n <- nrow(MB@Data[[blk]])
 
-  colnames(newBlock) <- NULL
-  rownames(newBlock) <- NULL
-
-  # Check Batches
-  if (!(is.null(batches))) {
-    if (!(is.numeric(batches))){
-      print("'batches' should be a numeric vector.")
-      stop("The 'batches' object is incorrect.")
-    } else {
-      if (nrow(newBlock) != length(batches)) {
-        print(sprintf("Please use a 'batches' object with %s items.", nrow(newBlock)))
-        stop("The length of 'batches' is incorrect.")
+    if (!is.null(batches)) {
+      if (!is.numeric(batches)) {
+        stop("'batches' must be a numeric vector.")
       }
-    }
-  }
-
-  # Check Metadata
-  if (!(is.null(metadata))){
-    if(is.data.frame(metadata)){
-      if(nrow(metadata) != nrow(newBlock)){
-        warning("The 'metadata' has an incorrect size and it was subsequently ignored.")
+      if (length(batches) != n) {
+        stop(sprintf(
+          "'batches' must have %d elements (samples in block '%s').", n, blk
+        ))
       }
-    } else {
-      warning("'metadata' must be a data.frame.")
+      MB@Batch[[blk]] <- batches
     }
 
+    if (!is.null(metadata)) {
+      if (!is.data.frame(metadata)) {
+        stop("'metadata' must be a data.frame.")
+      }
+      if (nrow(metadata) != n) {
+        stop(sprintf(
+          "'metadata' must have %d rows (samples in block '%s').", n, blk
+        ))
+      }
+      MB@Metadata[[blk]] <- metadata
+    }
   }
-
-  # Get the block name
-  block_name <- as.character(substitute(newBlock))
-  if(length(block_name) > 1) {
-    block_name <- "X"
-  }
-  Data <- list(newBlock)
-  names(Data) <- block_name
-
-  if(is.null(batches) && is.null(metadata)){
-    MB <- MultiBlock(Samples = newSamples,
-                     Data = Data,
-                     Variables = list(newVars))
-  } else if (is.null(batches) && !is.null(metadata)){
-    MB <- MultiBlock(Samples = newSamples,
-                     Data = Data,
-                     Variables = list(newVars),
-                     Metadata = list(metadata))
-    names(MB@Metadata) <- block_name
-  } else {
-    MB <- MultiBlock(Samples = newSamples,
-                     Data = Data,
-                     Variables = list(newVars),
-                     Batch = list(batches),
-                     Metadata = list(metadata))
-    names(MB@Batch) <- names(MB@Metadata) <- block_name
-  }
-
-  names(MB@Variables) <- block_name
 
   return(MB)
 }

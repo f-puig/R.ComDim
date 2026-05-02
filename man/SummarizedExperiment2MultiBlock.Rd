@@ -7,14 +7,14 @@
 SummarizedExperiment2MultiBlock(se, colData_samplenames = NULL, Batch = NULL)
 }
 \arguments{
-\item{se}{The SummarizedExperiment .}
+\item{se}{The SummarizedExperiment object.}
 
 \item{colData_samplenames}{Character string with the column metadata.}
 
 \item{Batch}{The name of the column that will be considered as Batch.}
 }
 \value{
-The MultiBlock
+The MultiBlock object.
 }
 \description{
 Converts a SummarizedExperiment into a MultiBlock.
