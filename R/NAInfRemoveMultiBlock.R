@@ -29,8 +29,6 @@
 #'   \code{col_max / factor.NA}. Default: 0.5.
 #' @param sd.noise Standard-deviation factor for \code{'random.noise'}:
 #'   \code{SD = abs(mean * sd.noise)}. Default: 0.3.
-#' @param seed.number Optional integer seed for reproducible
-#'   \code{'random.noise'} results. The RNG state is restored on exit.
 #' @param tune.sigma Tuning scalar for \code{na.method = 'QRILC'}. Default:
 #'   1 (Gaussian complete-data assumption).
 #' @param showWarning If \code{TRUE}, emit a warning when variables are
@@ -56,7 +54,6 @@ NAInfRemoveMultiBlock <- function(MB,
                                   constant = 0,
                                   factor.NA = 0.5,
                                   sd.noise = 0.3,
-                                  seed.number = NULL,
                                   tune.sigma = 1,
                                   showWarning = TRUE) {
   # ---- Input validation -------------------------------------------------- #
@@ -138,20 +135,6 @@ NAInfRemoveMultiBlock <- function(MB,
     minfrac <- 1
   }
   minfrac_n <- round(nrow(MB@Data[[block.ids[1]]]) * minfrac)
-
-  # ---- Set seed once for all random steps -------------------------------- #
-
-  if (!is.null(seed.number) &&
-    (na.method == "random.noise" || inf.method == "random.noise")) {
-    old_seed <- .Random.seed
-    on.exit(
-      {
-        .Random.seed <<- old_seed
-      },
-      add = TRUE
-    )
-    set.seed(seed.number)
-  }
 
   # ---- Step 1: discard variables with too many NA / Inf values ----------- #
 

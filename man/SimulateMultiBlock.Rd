@@ -9,8 +9,7 @@ SimulateMultiBlock(
   p = 2000L,
   n_sources = 4L,
   noise = 0.05,
-  n_blocks = 2L,
-  seed = 42L
+  n_blocks = 2L
 )
 }
 \arguments{
@@ -26,9 +25,6 @@ Default: \code{0.05} (5 \% noise).}
 
 \item{n_blocks}{Number of blocks to split the variables into. Default:
 \code{2}.}
-
-\item{seed}{Integer random seed passed to \code{set.seed()} for
-reproducibility. Set to \code{NULL} to skip seeding. Default: \code{42}.}
 }
 \value{
 A \code{\link{MultiBlock}} object with \code{n_blocks} blocks, each
@@ -60,7 +56,7 @@ The dataset is constructed as follows:
 }
 \examples{
 mb <- SimulateMultiBlock(n = 100, p = 200, n_sources = 4,
-                         noise = 0.05, n_blocks = 2, seed = 42)
+                         noise = 0.05, n_blocks = 2)
 mb <- NormalizeMultiBlock(mb, method = 'norm')
 res <- ComDim_PCA(mb, ndim = 4)
 }

@@ -249,7 +249,8 @@
 #' #   - Always return output$orthoscores; ComDim_y ignores it in phases
 #' #     where ort has already been removed.
 #' #   - Expand the single ropls Q loading to match the ncol(y_dummy) width.
-#' \dontrun{
+#' \donttest{
+#' if (requireNamespace("ropls", quietly = TRUE)) {
 #' fun.OPLSDA.ropls <- function(W, y, ndim, ...) {
 #'   output <- list()
 #'   # Convert dummy matrix to ropls-compatible -1/+1 vector
@@ -283,15 +284,19 @@
 #'   return(output)
 #' }
 #'
-#' resultsOPLSDA <- ComDim_y(allMB,
+#' b1_r <- matrix(rnorm(8 * 30), 8, 30)
+#' b2_r <- matrix(rnorm(8 * 20), 8, 20)
+#' mb_r <- MultiBlock(Data = list(b1 = b1_r, b2 = b2_r))
+#' resultsOPLSDA <- ComDim_y(mb_r,
 #'   y = c(rep("NI", 4), rep("OFF", 4)),
 #'   ndim = 1,
-#'   nort = 1, # replaces orthogonalization = TRUE
+#'   nort = 1,
 #'   type = "discriminant",
 #'   FUN = fun.OPLSDA.ropls,
 #'   method = "OPLS-DA(ropls)",
 #'   cv.k = 0
 #' )
+#' }
 #' }
 #' @export
 
@@ -470,7 +475,7 @@ ComDim_y <- function(MB = MB, y = y,
   if (give_error) {
     stop("The data is not ready for ComDim.")
   } else {
-    print("The data can be used for ComDim.")
+    message("The data can be used for ComDim.")
   }
 
 
@@ -490,7 +495,7 @@ ComDim_y <- function(MB = MB, y = y,
   end_ini_time <- Sys.time() # To end the count of the calculation time.
 
   if (loquace) {
-    print(sprintf("Initialisation finished after : %s millisecs", (end_ini_time - start_ini_time) * 1000))
+    message(sprintf("Initialisation finished after : %s millisecs", (end_ini_time - start_ini_time) * 1000))
   }
 
   utils::setTxtProgressBar(progress_bar, value = total_progress)
@@ -542,7 +547,7 @@ ComDim_y <- function(MB = MB, y = y,
 
     norm_comdim <- Sys.time()
     if (loquace) {
-      print(sprintf("Normalization of block %s finished after : %s millisecs", i, (norm_comdim - start_ini_time) * 1000))
+      message(sprintf("Normalization of block %s finished after : %s millisecs", i, (norm_comdim - start_ini_time) * 1000))
     }
     total_progress <- total_progress + pieceBar
     utils::setTxtProgressBar(progress_bar, value = total_progress)
@@ -634,7 +639,7 @@ ComDim_y <- function(MB = MB, y = y,
 
       ort_comdim <- Sys.time()
       if (loquace) {
-        print(sprintf(
+        message(sprintf(
           "Orthogonal component %s determined after : %s millisecs",
           jj, (ort_comdim - start_ini_time) * 1000
         ))
@@ -720,7 +725,7 @@ ComDim_y <- function(MB = MB, y = y,
 
     iter_comdim <- Sys.time()
     if (loquace) {
-      print(sprintf(
+      message(sprintf(
         "Component %s determined after : %s millisecs",
         dims, (iter_comdim - start_ini_time) * 1000
       ))
@@ -751,7 +756,7 @@ ComDim_y <- function(MB = MB, y = y,
 
   end_comdim <- Sys.time()
   if (loquace) {
-    print(sprintf("Scores finished after : %s millisecs", (end_comdim - start_ini_time) * 1000))
+    message(sprintf("Scores finished after : %s millisecs", (end_comdim - start_ini_time) * 1000))
   }
   total_progress <- total_progress + pieceBar
   utils::setTxtProgressBar(progress_bar, value = total_progress)
@@ -889,7 +894,7 @@ ComDim_y <- function(MB = MB, y = y,
 
   load_comdim <- Sys.time()
   if (loquace) {
-    print(sprintf("Loadings finished after : %s millisecs", (load_comdim - start_ini_time) * 1000))
+    message(sprintf("Loadings finished after : %s millisecs", (load_comdim - start_ini_time) * 1000))
   }
 
   total_progress <- total_progress + pieceBar
@@ -1315,7 +1320,7 @@ ComDim_y <- function(MB = MB, y = y,
   end_output <- Sys.time()
   running_time <- (end_output - start_ini_time)
   if (loquace) {
-    print(sprintf("Analysis finished after : %s seconds", running_time))
+    message(sprintf("Analysis finished after : %s seconds", running_time))
   }
   res_calib$runtime <- running_time # Total time of analysis
 

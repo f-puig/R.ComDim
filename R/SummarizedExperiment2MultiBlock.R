@@ -21,7 +21,8 @@
 #' @seealso \code{\link{MultiBlock}}, \code{\link{MultiAssayExperiment2MultiBlock}},
 #'   \code{\link{MultiBlock2MultiAssayExperiment}}
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' if (requireNamespace("SummarizedExperiment", quietly = TRUE)) {
 #' library(SummarizedExperiment)
 #' nrows <- 20; ncols <- 6
 #' counts <- matrix(runif(nrows * ncols, 1, 1e4), nrows)
@@ -29,6 +30,7 @@
 #' colnames(counts) <- paste0("sample",  seq_len(ncols))
 #' se <- SummarizedExperiment(assays = list(counts = counts))
 #' mb <- SummarizedExperiment2MultiBlock(se)
+#' }
 #' }
 #' @export
 SummarizedExperiment2MultiBlock <- function(se,

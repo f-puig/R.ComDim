@@ -12,8 +12,9 @@
 #' @param batchNormalisation Logical. If \code{TRUE} (default), each replicate block is divided
 #'   by its Frobenius norm and by the square root of the number of replicates in its original
 #'   block, to prevent blocks with more replicates from dominating the analysis.
-#' @param showSampleCorrespondence Logical. If \code{TRUE} (default), a matrix showing the
-#'   sample names assigned to each replicate block is printed to the console.
+#' @param showSampleCorrespondence Logical. If \code{TRUE} (default), the matrix of sample
+#'   names assigned to each replicate block is printed to the console via \code{print()}.
+#'   Set to \code{FALSE} to suppress this output.
 #' @details
 #'   Output block names follow the convention \code{<original_block>} when the original block has
 #'   only one batch, or \code{<original_block>_<batch_label>} when it has multiple batches.
@@ -78,8 +79,8 @@ SplitRW <- function(MB = MB, checkSampleCorrespondence = FALSE,
       }
     }
     if (length(unique(unlist(samples_per_batch))) > 1 && checkSampleCorrespondence == FALSE) {
-      print("Information is missing regarding the splitting.")
-      print("Using checkSampleCorrespondence as TRUE is recommended.")
+      message("Information is missing regarding the splitting.")
+      message("Using checkSampleCorrespondence as TRUE is recommended.")
       stop("The data cannot be split into replicate blocks.")
     }
 
@@ -99,7 +100,7 @@ SplitRW <- function(MB = MB, checkSampleCorrespondence = FALSE,
     }
 
     if (checkSampleCorrespondence == TRUE && length(replicate_names) == 0) {
-      print("There are 0 samples in common across the replicate blocks")
+      message("There are 0 samples in common across the replicate blocks")
       give_error <- 1
     }
 
@@ -113,10 +114,7 @@ SplitRW <- function(MB = MB, checkSampleCorrespondence = FALSE,
 
 
   ## PROCEED WITH THE RW SPLITTING.
-  # df_SampleNames is a table printed in the console (go to the end of the script for more info)
-  if (showSampleCorrespondence) {
-    df_SampleNames <- matrix(, nrow = length(replicate_names), ncol = 0)
-  }
+  df_SampleNames <- matrix(, nrow = length(replicate_names), ncol = 0)
 
   k <- 1
   for (i in names(MB@Batch)) {
@@ -135,8 +133,8 @@ SplitRW <- function(MB = MB, checkSampleCorrespondence = FALSE,
       }
       # Keep only the common samples across blocks
       if (length(replicate_position) != length(replicate_names)) {
-        print(sprintf("There are sample duplicates in batch %s from block %s.", as.character(batch_names[[i]][j]), as.character(i)))
-        print("Duplicate samples should be removed.")
+        warning(sprintf("There are sample duplicates in batch %s from block %s.", as.character(batch_names[[i]][j]), as.character(i)))
+        warning("Duplicate samples should be removed.")
         stop("Existence of duplicate samples within one or more batches.")
       }
 
@@ -193,7 +191,7 @@ SplitRW <- function(MB = MB, checkSampleCorrespondence = FALSE,
   ## It is wise to use it when checkSampleCorrespondence is set to FALSE.
   if (showSampleCorrespondence) {
     colnames(df_SampleNames) <- names(newMB@Data)
-    print("The sample names are:")
+    message("The sample names are:")
     print(df_SampleNames)
   }
 

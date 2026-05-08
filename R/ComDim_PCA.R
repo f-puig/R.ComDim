@@ -164,7 +164,7 @@ ComDim_PCA <- function(MB = MB, ndim = NULL,
   if (give_error) {
     stop("The data is not ready for ComDim.")
   } else {
-    print("The data can be used for ComDim.")
+    message("The data can be used for ComDim.")
   }
 
 
@@ -185,12 +185,12 @@ ComDim_PCA <- function(MB = MB, ndim = NULL,
   # isP <- grepl(output, 'P')
 
   if (CompMethod == "Tall" && any(variable_number > 1000)) {
-    print("The method 'Tall' is not recommeded for large blocks (> 1000 columns).")
-    print("Do you still want to continue with the analysis?")
-    print("You can change now the CompMethod if you prefer: (yes/no)")
+    message("The method 'Tall' is not recommeded for large blocks (> 1000 columns).")
+    message("Do you still want to continue with the analysis?")
+    message("You can change now the CompMethod if you prefer: (yes/no)")
     ans1 <- tolower(readline("Type your choice: (y/n)"))
     if (ans1 == "y" || ans1 == "yes") {
-      print("Which method do you want to use instead (Normal/Kernel/PCT/Wide)?")
+      message("Which method do you want to use instead (Normal/Kernel/PCT/Wide)?")
       ans2 <- tolower(readline("Type your choice: (n/k/p/w)"))
       if (ans2 == "n" || ans2 == "normal") {
         CompMethod <- "Normal"
@@ -204,7 +204,7 @@ ComDim_PCA <- function(MB = MB, ndim = NULL,
         stop("Wrong answer typed.")
       }
     } else if (ans1 == "n" || ans1 == "no") {
-      print("The method 'Tall' will be used")
+      message("The method 'Tall' will be used")
     } else {
       stop("Wrong answer typed.")
     }
@@ -222,7 +222,7 @@ ComDim_PCA <- function(MB = MB, ndim = NULL,
   end_ini_time <- Sys.time() # To end the count of the calculation time.
 
   if (loquace) {
-    print(sprintf("Initialisation finished after : %s millisecs", (end_ini_time - start_ini_time) * 1000))
+    message(sprintf("Initialisation finished after : %s millisecs", (end_ini_time - start_ini_time) * 1000))
   }
 
   utils::setTxtProgressBar(progress_bar, value = total_progress)
@@ -282,7 +282,7 @@ ComDim_PCA <- function(MB = MB, ndim = NULL,
 
     norm_comdim <- Sys.time()
     if (loquace) {
-      print(sprintf("Normalization of block %s finished after : %s millisecs", i, (norm_comdim - start_ini_time) * 1000))
+      message(sprintf("Normalization of block %s finished after : %s millisecs", i, (norm_comdim - start_ini_time) * 1000))
     }
     total_progress <- total_progress + pieceBar
     utils::setTxtProgressBar(progress_bar, value = total_progress)
@@ -301,7 +301,7 @@ ComDim_PCA <- function(MB = MB, ndim = NULL,
   end_comp_time <- Sys.time()
 
   if (loquace) {
-    print(sprintf("Compression finished after : %s millisecs", (end_comp_time - start_ini_time) * 1000))
+    message(sprintf("Compression finished after : %s millisecs", (end_comp_time - start_ini_time) * 1000))
   }
 
   total_progress <- total_progress + pieceBar * ntable
@@ -377,7 +377,7 @@ ComDim_PCA <- function(MB = MB, ndim = NULL,
 
     iter_comdim <- Sys.time()
     if (loquace) {
-      print(sprintf("Component %s determined after : %s millisecs", dims, (iter_comdim - start_ini_time) * 1000))
+      message(sprintf("Component %s determined after : %s millisecs", dims, (iter_comdim - start_ini_time) * 1000))
     }
     total_progress <- total_progress + pieceBar
     utils::setTxtProgressBar(progress_bar, value = total_progress)
@@ -402,7 +402,7 @@ ComDim_PCA <- function(MB = MB, ndim = NULL,
 
   end_comdim <- Sys.time()
   if (loquace) {
-    print(sprintf("Scores finished after : %s millisecs", (end_comdim - start_ini_time) * 1000))
+    message(sprintf("Scores finished after : %s millisecs", (end_comdim - start_ini_time) * 1000))
   }
   total_progress <- total_progress + pieceBar
   utils::setTxtProgressBar(progress_bar, value = total_progress)
@@ -548,7 +548,7 @@ ComDim_PCA <- function(MB = MB, ndim = NULL,
   #### If Output==[], nothing else is calculated
   load_comdim <- Sys.time()
   if (loquace) {
-    print(sprintf("Loadings finished after : %s millisecs", (load_comdim - start_ini_time) * 1000))
+    message(sprintf("Loadings finished after : %s millisecs", (load_comdim - start_ini_time) * 1000))
   }
 
   total_progress <- total_progress + pieceBar
@@ -658,7 +658,7 @@ ComDim_PCA <- function(MB = MB, ndim = NULL,
   end_output <- Sys.time()
   running_time <- (end_output - start_ini_time)
   if (loquace) {
-    print(sprintf("Analysis finished after : %s seconds", running_time))
+    message(sprintf("Analysis finished after : %s seconds", running_time))
   }
   res_calib$runtime <- running_time # Total time of analysis
 

@@ -213,7 +213,7 @@ PredictMultiBlock <- function(MB = MB, y, model = model,
     model@Orthogonal$Q.scores <- Q_ort
     model@Orthogonal$T.scores <- T_Loc_ort
     if (loquace) {
-      cat("Orthogonal Q.scores and T.scores were projected from the ComDim model.\n")
+      message("Orthogonal Q.scores and T.scores were projected from the ComDim model.")
     }
   }
 
@@ -266,7 +266,7 @@ PredictMultiBlock <- function(MB = MB, y, model = model,
   model@Q.scores <- Q
   model@T.scores <- T_Loc
   if (loquace) {
-    cat("Predictive Q.scores and T.scores were projected from the ComDim model.\n")
+    message("Predictive Q.scores and T.scores were projected from the ComDim model.")
   }
 
   # ---------------------------------------------------------------------------
@@ -278,7 +278,7 @@ PredictMultiBlock <- function(MB = MB, y, model = model,
       Ypred[, i] <- Ypred[, i] + model@PLS.model$B0[i]
     }
     model@Prediction$Y.pred <- Ypred
-    if (loquace) cat("Y.pred was predicted from the ComDim model.\n")
+    if (loquace) message("Y.pred was predicted from the ComDim model.")
 
     # -----------------------------------------------------------------------
     # STEP 4 — Classification stats (discriminant + y supplied)
@@ -357,9 +357,9 @@ PredictMultiBlock <- function(MB = MB, y, model = model,
       model@Prediction$Specificity <- specvec
       model@Prediction$confusionMatrix <- confusionMatrix
       if (loquace) {
-        cat(
+        message(
           "Q2, DQ2, predClass, Sensitivity, Specificity, and confusionMatrix",
-          "were computed for the new samples.\n"
+          "were computed for the new samples."
         )
       }
     } else if (hasArg(y) && !is_discriminant) {
@@ -369,7 +369,7 @@ PredictMultiBlock <- function(MB = MB, y, model = model,
       PRESS_r <- colSums((Ypred - y)^2)
       TSS_r <- colSums(sweep(y, 2, colMeans(y))^2)
       model@Q2 <- setNames(1 - PRESS_r / TSS_r, colnames(as.matrix(y)))
-      if (loquace) cat("Q2 was computed for the new samples.\n")
+      if (loquace) message("Q2 was computed for the new samples.")
     }
   }
 

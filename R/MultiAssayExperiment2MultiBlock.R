@@ -21,7 +21,8 @@
 #' @return A \code{MultiBlock} object with one block per experiment in \code{se}.
 #' @seealso \code{\link{MultiBlock}}, \code{\link{MultiBlock2MultiAssayExperiment}}
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' if (requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
 #' library(MultiAssayExperiment)
 #' mae <- MultiAssayExperiment(
 #'   experiments = ExperimentList(
@@ -30,6 +31,7 @@
 #'   )
 #' )
 #' mb <- MultiAssayExperiment2MultiBlock(mae)
+#' }
 #' }
 #' @export
 MultiAssayExperiment2MultiBlock <- function(se,

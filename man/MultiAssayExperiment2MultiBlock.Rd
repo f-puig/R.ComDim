@@ -35,7 +35,8 @@ Columns (samples) are intersected across all experiments via \code{intersectColu
   removed from the metadata, and stored as the \code{Batch} slot of the MultiBlock.
 }
 \examples{
-\dontrun{
+\donttest{
+if (requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
 library(MultiAssayExperiment)
 mae <- MultiAssayExperiment(
   experiments = ExperimentList(
@@ -44,6 +45,7 @@ mae <- MultiAssayExperiment(
   )
 )
 mb <- MultiAssayExperiment2MultiBlock(mae)
+}
 }
 }
 \seealso{

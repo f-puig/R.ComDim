@@ -24,8 +24,9 @@ retained, which is safer when batches have different sizes or orderings.}
 by its Frobenius norm and by the square root of the number of replicates in its original
 block, to prevent blocks with more replicates from dominating the analysis.}
 
-\item{showSampleCorrespondence}{Logical. If \code{TRUE} (default), a matrix showing the
-sample names assigned to each replicate block is printed to the console.}
+\item{showSampleCorrespondence}{Logical. If \code{TRUE} (default), the matrix of sample
+names assigned to each replicate block is printed to the console via \code{print()}.
+Set to \code{FALSE} to suppress this output.}
 }
 \value{
 A \code{MultiBlock} object in which each block corresponds to one batch of one

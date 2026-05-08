@@ -16,12 +16,15 @@
 #' @return A \code{MultiAssayExperiment} object with one experiment per block in \code{MB}.
 #' @seealso \code{\link{MultiBlock}}, \code{\link{MultiAssayExperiment2MultiBlock}}
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' if (requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
+#' library(MultiAssayExperiment)
 #' b1 <- matrix(rnorm(50), 5, 10, dimnames = list(paste0("s", 1:5), paste0("v", 1:10)))
 #' b2 <- matrix(rnorm(30), 5,  6, dimnames = list(paste0("s", 1:5), paste0("w", 1:6)))
 #' mb <- MultiBlock(Data = list(block1 = b1, block2 = b2))
 #' mae <- MultiBlock2MultiAssayExperiment(mb)
 #' mae <- MultiBlock2MultiAssayExperiment(mb, MSEmetadata = list(study = "example"))
+#' }
 #' }
 #' @export
 MultiBlock2MultiAssayExperiment <- function(MB,

@@ -14,7 +14,6 @@ NAInfRemoveMultiBlock(
   constant = 0,
   factor.NA = 0.5,
   sd.noise = 0.3,
-  seed.number = NULL,
   tune.sigma = 1,
   showWarning = TRUE
 )
@@ -51,9 +50,6 @@ the replacement mean equals \code{col_min * factor.NA}. For +Inf:
 
 \item{sd.noise}{Standard-deviation factor for \code{'random.noise'}:
 \code{SD = abs(mean * sd.noise)}. Default: 0.3.}
-
-\item{seed.number}{Optional integer seed for reproducible
-\code{'random.noise'} results. The RNG state is restored on exit.}
 
 \item{tune.sigma}{Tuning scalar for \code{na.method = 'QRILC'}. Default:
 1 (Gaussian complete-data assumption).}

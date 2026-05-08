@@ -288,7 +288,8 @@ resultsOPLS <- ComDim_y(mb,
 #   - Always return output$orthoscores; ComDim_y ignores it in phases
 #     where ort has already been removed.
 #   - Expand the single ropls Q loading to match the ncol(y_dummy) width.
-\dontrun{
+\donttest{
+if (requireNamespace("ropls", quietly = TRUE)) {
 fun.OPLSDA.ropls <- function(W, y, ndim, ...) {
   output <- list()
   # Convert dummy matrix to ropls-compatible -1/+1 vector
@@ -322,14 +323,18 @@ fun.OPLSDA.ropls <- function(W, y, ndim, ...) {
   return(output)
 }
 
-resultsOPLSDA <- ComDim_y(allMB,
+b1_r <- matrix(rnorm(8 * 30), 8, 30)
+b2_r <- matrix(rnorm(8 * 20), 8, 20)
+mb_r <- MultiBlock(Data = list(b1 = b1_r, b2 = b2_r))
+resultsOPLSDA <- ComDim_y(mb_r,
   y = c(rep("NI", 4), rep("OFF", 4)),
   ndim = 1,
-  nort = 1, # replaces orthogonalization = TRUE
+  nort = 1,
   type = "discriminant",
   FUN = fun.OPLSDA.ropls,
   method = "OPLS-DA(ropls)",
   cv.k = 0
 )
+}
 }
 }

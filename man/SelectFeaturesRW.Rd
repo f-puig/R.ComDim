@@ -66,7 +66,7 @@ The function applies an S-plot approach to identify variables that are both stro
   separate variables into positive and negative groups.
 }
 \examples{
-\dontrun{
+\donttest{
 b1 <- matrix(rnorm(500), 10, 50)
 batch_b1 <- rep(1, 10)
 b2 <- matrix(rnorm(800), 30, 80)

@@ -29,15 +29,13 @@
 #'   Default: \code{0.05} (5 \% noise).
 #' @param n_blocks Number of blocks to split the variables into. Default:
 #'   \code{2}.
-#' @param seed Integer random seed passed to \code{set.seed()} for
-#'   reproducibility. Set to \code{NULL} to skip seeding. Default: \code{42}.
 #' @return A \code{\link{MultiBlock}} object with \code{n_blocks} blocks, each
 #'   of size \eqn{n \times (p / \text{n\_blocks})}, named \code{"Block1"},
 #'   \code{"Block2"}, etc.
 #' @seealso \code{\link{ComDim_PCA}}, \code{\link{MultiBlock}}
 #' @examples
 #' mb <- SimulateMultiBlock(n = 100, p = 200, n_sources = 4,
-#'                          noise = 0.05, n_blocks = 2, seed = 42)
+#'                          noise = 0.05, n_blocks = 2)
 #' mb <- NormalizeMultiBlock(mb, method = 'norm')
 #' res <- ComDim_PCA(mb, ndim = 4)
 #' @export
@@ -45,10 +43,7 @@ SimulateMultiBlock <- function(n         = 500L,
                                p         = 2000L,
                                n_sources = 4L,
                                noise     = 0.05,
-                               n_blocks  = 2L,
-                               seed      = 42L) {
-  if (!is.null(seed)) set.seed(seed)
-
+                               n_blocks  = 2L) {
   if (p %% n_blocks != 0L)
     stop("'p' must be divisible by 'n_blocks'.")
   if (p %% n_sources != 0L)

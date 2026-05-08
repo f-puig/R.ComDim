@@ -12,7 +12,6 @@ ComDim_OPLS(
   method = c("OPLS-DA", "OPLS-R"),
   decisionRule = c("fixed", "max")[2],
   normalise = FALSE,
-  threshold = 1e-10,
   loquace = FALSE,
   cv.k = 7
 )
@@ -25,7 +24,9 @@ numeric matrix/vector for OPLS-R.}
 
 \item{ndim}{Number of predictive Common Dimensions. Default is 1.}
 
-\item{nort}{Number of orthogonal Common Dimensions. Default is 1.}
+\item{nort}{Maximum number of orthogonal Common Dimensions. Default is 1.
+The actual number used is determined by ConsensusOPLS cross-validation and
+may be less than this value.}
 
 \item{method}{'OPLS-DA' for discriminant analysis or 'OPLS-R' for regression.}
 
@@ -35,154 +36,41 @@ assigned to the class with the highest Y-hat.}
 
 \item{normalise}{To apply block normalisation. FALSE == no (default), TRUE == yes.}
 
-\item{threshold}{The threshold limit to stop the iterations (default 1e-10).}
-
 \item{loquace}{To display the calculation times. TRUE == yes, FALSE == no (default).}
 
 \item{cv.k}{Number of folds for k-fold cross-validation (default 7). Set
-to 0 to skip CV. When \code{cv.k >= 2}, \code{Q2} and \code{DQ2} in the
-output reflect cross-validated predictive ability; otherwise they reflect
-training-set fit. For each fold, test samples are first ort-deflated using
-\code{P.loadings.ort} from the training fold model before prediction.}
+to 0 to skip CV output. ConsensusOPLS always performs internal CV to select
+the optimal number of orthogonal components; when \code{cv.k >= 2} the
+resulting \code{Q2} and \code{DQ2} reflect that cross-validation.}
 }
 \value{
 A \code{ComDim} object.  All slots are populated.  Key slots:
 \describe{
   \item{\code{Method}}{\code{"OPLS-DA"} or \code{"OPLS-R"}.}
   \item{\code{ndim}}{Number of predictive Common Dimensions.}
-  \item{\code{Q.scores}}{Predictive global scores matrix (\eqn{n \times
-    ndim}).  These are the KOPLS predictive scores \eqn{\mathbf{T}_p}
-    computed from the RV-weighted double-centred kernel after orthogonal
-    deflation.}
-  \item{\code{T.scores}}{Named list of block-specific predictive local
-    scores (\eqn{n \times ndim} each), derived from the orthogonally-
-    deflated blocks.}
-  \item{\code{P.loadings}}{Global predictive loadings (\eqn{p_{tot}
-    \times ndim}):
-    \eqn{\mathbf{P} = \tilde{\mathbf{X}}'\mathbf{Q}},
-    where \eqn{\tilde{\mathbf{X}}} is the orthogonally-deflated
-    concatenated X.}
-  \item{\code{Saliences}}{Predictive block salience matrix (\eqn{ntable
-    \times ndim}): RV-weighted kernel-based saliences per block per
-    predictive component.}
-  \item{\code{Orthogonal}}{List with orthogonal component outputs:
-    \describe{
-      \item{\code{nort}}{Number of orthogonal components.}
-      \item{\code{Q.scores}}{Global orthogonal scores (\eqn{n \times nort}),
-        unit-norm columns.}
-      \item{\code{T.scores}}{Named list of block-specific orthogonal local
-        scores (\eqn{n \times nort} each).}
-      \item{\code{P.loadings.ort}}{Orthogonal loadings (\eqn{p_{tot} \times
-        nort}): concatenated block-slice local ort loadings.}
-      \item{\code{Saliences.ort}}{Orthogonal block saliences (\eqn{ntable
-        \times nort}).}
-    }
-  }
-  \item{\code{R2X}}{Named vector (length \eqn{ndim + nort}) combining
-    predictive and orthogonal X-variance fractions, using the KOPLS
-    kernel \eqn{\mathbf{K} = \mathbf{H}
-    \bigl(\sum_b \mathrm{RV}_b\,\mathbf{X}_b\mathbf{X}_b'/
-    \|\mathbf{X}_b\mathbf{X}_b'\|_F\bigr) \mathbf{H}} (RV-weighted,
-    double-centred, \eqn{\mathbf{H} = \mathbf{I} - n^{-1}\mathbf{J}}):
-    \describe{
-      \item{Predictive \code{CC_a}:}{
-        \eqn{R2X_{p,a} = \|\mathbf{T}_p[,a]\|^2 / \mathrm{tr}(\mathbf{K})},
-        the fraction of X kernel sum-of-squares captured by predictive
-        score \eqn{a}.}
-      \item{Orthogonal \code{ort_a}:}{
-        \eqn{R2X_{o,a} =
-        (\mathrm{tr}(\mathbf{K}_{a-1}) - \mathrm{tr}(\mathbf{K}_a)) /
-        \mathrm{tr}(\mathbf{K}_0)},
-        the fraction of kernel SS removed by the \eqn{a}-th orthogonal
-        deflation.}
-    }
-  }
-  \item{\code{R2Y}}{Named vector (length \eqn{ndim + nort}): marginal
-    Y-variance fractions.  For predictive components the first entry is the
-    cumulative R2Y with one predictive component (before any ort deflation);
-    subsequent entries are marginal increments.  Orthogonal entries
-    are the change in R2Y when each ort deflation is applied (by
-    construction \eqn{\approx 0} since ort components are orthogonal
-    to Y).}
-  \item{\code{Q2}}{Cross-validated Q2 per class/response (when
-    \code{cv.k >= 2}; otherwise training-set fit), named by class:
-    \deqn{Q2 = 1 - PRESS / TSS_Y,}
-    where \eqn{PRESS = \sum_i (\hat{y}_i - y_i)^2} and
-    \eqn{TSS_Y = \sum_i (y_i - \bar{y})^2}, computed from the full-model
-    CV level (all ort deflations applied).}
-  \item{\code{DQ2}}{(OPLS-DA only) Cross-validated discriminant Q2 per
-    class, using only penalising residuals:
-    \deqn{DQ2 = 1 - PRESSD / TSS_Y,}
-    where \eqn{PRESSD} sums \eqn{\hat{y}_i^2} for class-0 samples with
-    \eqn{\hat{y}_i > 0}, and \eqn{(\hat{y}_i - 1)^2} for class-1 samples
-    with \eqn{\hat{y}_i < 1}.}
-  \item{\code{VIP}}{Global total VIP (named vector, length \eqn{p_{tot}}):
-    concatenation of \code{VIP.block[[b]]$tot} across blocks:
-    \eqn{VIPtot_j = \sqrt{(VIPp_j^2 + VIPo_j^2)/2}}.}
-  \item{\code{VIP.block}}{Named list (one \code{data.frame} per block)
-    with columns:
-    \describe{
-      \item{\code{p}}{Predictive VIP (Y-based).
-        Let
-        \eqn{\mathbf{Q}_s = \mathbf{Y}'\mathbf{T}_p\,
-        \mathrm{diag}(1/\|\mathbf{T}_p[,a]\|^2)},
-        \eqn{\mathbf{U}_s = \mathbf{Y}\mathbf{Q}_s\,
-        \mathrm{diag}(1/\|\mathbf{Q}_s[,a]\|^2)},
-        and \eqn{\tilde{\mathbf{W}}_s} = column-L2-normalised
-        \eqn{\mathbf{X}_b'\mathbf{U}_s\,
-        \mathrm{diag}(1/\|\mathbf{U}_s[,a]\|^2)};
-        with \eqn{s_a = \|\mathbf{T}_p[,a]\|^2\|\mathbf{Q}_s[,a]\|^2}:
-        \deqn{VIPp_j = \sqrt{p_b \cdot
-          \frac{\sum_a s_a \tilde{W}_{s,j,a}^2}{\sum_a s_a}}.}}
-      \item{\code{o}}{Orthogonal VIP (loadings-based).
-        Let \eqn{\tilde{\mathbf{P}}_o} be the column-L2-normalised
-        block-slice of the orthogonal loadings and
-        \eqn{s_a = \|\mathbf{q}_{ort}[,a]\|^2} (\eqn{= 1} for unit-norm
-        ort scores):
-        \deqn{VIPo_j = \sqrt{p_b \cdot
-          \frac{\sum_a s_a \tilde{P}_{o,j,a}^2}{\sum_a s_a}}.}}
-      \item{\code{tot}}{Total VIP:
-        \eqn{VIPtot_j = \sqrt{(VIPp_j^2 + VIPo_j^2)/2}}.}
-    }
-    Row names are variable names.
-  }
-  \item{\code{PLS.model}}{KOPLS regression objects: \code{W}
-    (variable-space prediction weight matrix, \eqn{p_{tot} \times ndim},
-    \eqn{\mathbf{W}_{pred}[b] =
-    \tilde{\mathbf{X}}_b'\mathbf{U}_p\mathbf{S}_p\,
-    \mathrm{RV}_b / \|\mathbf{X}_b\mathbf{X}_b'\|_F});
-    \code{B} (regression coefficients,
-    \eqn{\mathbf{B} =
-    \mathbf{W}_{pred}\mathbf{B}_t\mathbf{C}_p'},
-    where \eqn{\mathbf{B}_t = (\mathbf{T}_p'\mathbf{T}_p)^{-1}
-    \mathbf{T}_p'\mathbf{U}_p} and \eqn{\mathbf{C}_p} are Y loadings
-    from SVD(\eqn{\mathbf{Y}'\mathbf{K}\mathbf{Y}}));
-    \code{B0} (intercept,
-    \eqn{\mathbf{B}_0 = \bar{\mathbf{y}} -
-    \overline{\tilde{\mathbf{x}}}\mathbf{B}});
-    \code{Y} (response matrix as supplied).
-    Training-set predictions:
-    \eqn{\hat{\mathbf{Y}} =
-    \tilde{\mathbf{X}}\mathbf{B} + \mathbf{B}_0},
-    where \eqn{\tilde{\mathbf{X}}} is the orthogonally-deflated X.}
-  \item{\code{cv}}{Cross-validation results when \code{cv.k >= 2} (empty
-    list otherwise): \code{k} (number of folds), \code{Ypred}
-    (\eqn{n \times ncol(Y)} full-model CV predictions, all ort deflations
-    applied), \code{Ypred.p} (pred-only CV predictions, no ort deflation),
-    \code{Q2} (CV Q2 per class/response), \code{Q2.levels} (overall Q2
-    per ort level \code{"p"}, \code{"po1"}, \ldots, for diagnostics),
-    \code{DQ2} (CV DQ2 per class, OPLS-DA only).}
-  \item{\code{Prediction}}{Training-set predictions: \code{Y.pred}; for
-    OPLS-DA also \code{decisionRule}, \code{trueClass}, \code{predClass},
+  \item{\code{Q.scores}}{Predictive global scores matrix (\eqn{n \times ndim}).}
+  \item{\code{T.scores}}{Named list of block-specific predictive local scores.}
+  \item{\code{P.loadings}}{Global predictive loadings.}
+  \item{\code{Saliences}}{Predictive block salience matrix (\eqn{ntable \times ndim}).}
+  \item{\code{Orthogonal}}{List with orthogonal component outputs: \code{nort},
+    \code{Q.scores}, \code{T.scores}, \code{P.loadings.ort}, \code{Saliences.ort}.}
+  \item{\code{R2X}}{Named vector (length \eqn{ndim + nort}) of X-variance fractions.}
+  \item{\code{R2Y}}{Named vector (length \eqn{ndim + nort}) of Y-variance fractions.}
+  \item{\code{Q2}}{Cross-validated Q2 per class/response (when \code{cv.k >= 2};
+    otherwise training-set fit).}
+  \item{\code{DQ2}}{(OPLS-DA only) Cross-validated discriminant Q2 per class.}
+  \item{\code{VIP}}{Global total VIP (named vector, length \eqn{p_{tot}}).}
+  \item{\code{VIP.block}}{Named list (one data.frame per block) with columns
+    \code{p}, \code{o}, \code{tot}.}
+  \item{\code{PLS.model}}{KOPLS regression objects: \code{W}, \code{B}, \code{B0}, \code{Y}.}
+  \item{\code{cv}}{Cross-validation results when \code{cv.k >= 2}: \code{k},
+    \code{Ypred}, \code{Q2}, \code{DQ2}.}
+  \item{\code{Prediction}}{Training-set predictions: \code{Y.pred}; for OPLS-DA
+    also \code{decisionRule}, \code{trueClass}, \code{predClass},
     \code{Sensitivity}, \code{Specificity}, \code{confusionMatrix}.}
-  \item{\code{Mean}}{List with \code{MeanMB} (column means per block) and
-    \code{MeanY} (column means of Y).}
-  \item{\code{Norm}}{List with \code{NormMB} (block Frobenius norms),
-    \code{FrobNorms} (Frobenius norms of block kernels, used in KOPLS
-    weight computation), and \code{RVweights} (per-block modified RV
-    coefficients used to combine block kernels).}
-  \item{\code{variable.block}}{Block membership of each row in
-    \code{P.loadings} and each element of \code{VIP}.}
+  \item{\code{Mean}}{List with \code{MeanMB} and \code{MeanY}.}
+  \item{\code{Norm}}{List with \code{NormMB}, \code{FrobNorms}, \code{RVweights}.}
+  \item{\code{variable.block}}{Block membership of each variable.}
   \item{\code{runtime}}{Total computation time in seconds.}
 }
 }
@@ -191,6 +79,12 @@ Finding common dimensions in multi-block datasets using OPLS. Also known as Cons
 (ComDim-OPLS) for multiblock structures: orthogonal components uncorrelated
 with Y are extracted from all blocks simultaneously before the predictive
 components are computed.
+}
+\details{
+This function is a wrapper around \code{\link[ConsensusOPLS]{ConsensusOPLS}}.
+The core kernel-OPLS extraction is delegated to that package; all ComDim
+output slots (local scores, loadings, VIP, sensitivity, confusion matrix,
+etc.) are computed from the returned model objects.
 }
 \examples{
 b1 <- matrix(rnorm(500), 10, 50)

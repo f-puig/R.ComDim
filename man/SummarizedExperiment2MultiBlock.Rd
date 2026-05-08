@@ -34,7 +34,8 @@ Each assay is transposed so that samples are in rows and features in columns. Sa
   subsequent assays are appended as additional blocks with no extra metadata.
 }
 \examples{
-\dontrun{
+\donttest{
+if (requireNamespace("SummarizedExperiment", quietly = TRUE)) {
 library(SummarizedExperiment)
 nrows <- 20; ncols <- 6
 counts <- matrix(runif(nrows * ncols, 1, 1e4), nrows)
@@ -42,6 +43,7 @@ rownames(counts) <- paste0("feature", seq_len(nrows))
 colnames(counts) <- paste0("sample",  seq_len(ncols))
 se <- SummarizedExperiment(assays = list(counts = counts))
 mb <- SummarizedExperiment2MultiBlock(se)
+}
 }
 }
 \seealso{

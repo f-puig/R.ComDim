@@ -1,21 +1,24 @@
 Package: R.ComDim
 Type: Package
-Title: 'ComDim' Analysis in R
+Title: Common Dimensions (ComDim) Multi-Block Analysis
 Version: 1.0.0
 Authors@R: person(given = "Francesc",
                   family = "Puig-Castellví",
                   role = c("aut", "cre"),
                   email = "puig.francesc@gmail.com")
 Description:
-    Provides functions to run 'ComDim' analysis.
-    'ComDim' is a multi-block method that simultaneously considers multiple data
-    tables to find latent components that are common to all the tables as well 
-    as those specific to each data table, along with the contribution of each 
-    table to each component.
+    Common Dimensions (ComDim) is a multi-block method that simultaneously
+    considers multiple data tables to find latent components that are common
+    to all the tables as well as those specific to each data table, along
+    with the contribution of each table to each component.
+    See Jouan-Rimbaud Bouveresse and Rutledge (2024)
+    <doi:10.1002/cem.3454>, Boccard and Rutledge (2013)
+    <doi:10.1016/j.aca.2013.01.022>, and Puig-Castellví et al. (2021)
+    <doi:10.1016/j.chemolab.2021.104422>.
 License: MIT + file LICENSE
 Depends: methods
-Imports: pracma, utils, ggplot2
-Suggests: gridExtra, imputeLCMD, ica, MultiAssayExperiment, SummarizedExperiment
+Imports: pracma, utils, ggplot2, ConsensusOPLS
+Suggests: gridExtra, imputeLCMD, ica, MultiAssayExperiment, SummarizedExperiment, ropls
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.3

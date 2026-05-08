@@ -110,7 +110,7 @@ ExpandMultiBlock <- function(data = NULL, metadata = NULL, minblock = 0, loquace
   }
 
   if (length(data_list) == 0) {
-    cat("0 blocks were made. Check whether the minblock threshold was set too high.")
+    warning("0 blocks were made. Check whether the minblock threshold was set too high.")
     return(NULL)
   }
 

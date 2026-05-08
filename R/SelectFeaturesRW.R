@@ -39,7 +39,7 @@
 #'   highlighted in red.
 #' @seealso \code{\link{SplitRW}}, \code{\link{ComDim_PCA}}
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' b1 <- matrix(rnorm(500), 10, 50)
 #' batch_b1 <- rep(1, 10)
 #' b2 <- matrix(rnorm(800), 30, 80)
